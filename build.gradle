@@ -1,0 +1,24 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    def currentVersion = file("${rootDir}/../version.txt").text.trim()
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath "io.realm:realm-gradle-plugin:${currentVersion}"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
