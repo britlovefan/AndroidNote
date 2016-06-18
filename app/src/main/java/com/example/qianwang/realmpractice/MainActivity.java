@@ -17,10 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private AddressResultReceiver mResultReceiver;
-    int resultcode;
     Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 String imagePath = file.getAbsolutePath();
                 Location curLocation = readGeoTagImage(imagePath);
                 startIntentService(curLocation);
-                mResultReceiver.onReceiveResult(resultcode,bundle);
-
             }
         }
     }
@@ -81,10 +79,11 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
             String mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            //Deal with the addressoutput here
+
+
+
             // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
                 Context context = getApplicationContext();
