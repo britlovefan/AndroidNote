@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
@@ -60,8 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
+    // if not using emulator
     public void loadPictures() {
-        File[] files = new File("${rootDir}/../pictures").listFiles();
+        File sdcard = Environment.getExternalStorageDirectory();
+        File[] files = sdcard.listFiles();
+        //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
             String[] bits = file.getName().split(".");
