@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by qianwang on 6/17/16. The address look up service
+ * Created by qianwang on 6/17/16. The address look up service, the address lookup should be
+ * -plemented in background thread
  */
 public class FetchAddress extends IntentService {
     private static final String TAG = "MyIntentService";

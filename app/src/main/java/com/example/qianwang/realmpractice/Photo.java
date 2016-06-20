@@ -10,6 +10,7 @@ import io.realm.annotations.Required;
  */
 public class Photo extends RealmObject {
     private String id;
+    private String timeStamp;
     private double Latitude;
     private double Longitude;
 
@@ -18,6 +19,12 @@ public class Photo extends RealmObject {
     }
     public void setId(String id) {
         this.id = id;
+    }
+    public String getTimeStamp(){
+        return timeStamp;
+    }
+    public void setTimeStamp(String timeStamp){
+        this.timeStamp = timeStamp;
     }
     public double getLatitude() {
         return Latitude;

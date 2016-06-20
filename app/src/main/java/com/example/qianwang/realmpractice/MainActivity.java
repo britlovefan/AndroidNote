@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.style.CharacterStyle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -44,8 +46,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        final Button button = (Button)findViewById(R.id.load_photo);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                loadPictures();
+            }
+        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 double longitude = curLocation.getLongitude();
                 update(file.getName(),latitude,longitude);
 
-                //what trigger this kind of service
+                //what trigger this kind of service??(Still not sure what to put in the background thread)
                 startIntentService(curLocation);
             }
         }
