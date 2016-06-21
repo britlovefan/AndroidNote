@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // grant the permission at runtime
         final Button button = (Button)findViewById(R.id.load_photo);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -60,25 +61,49 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        // Assume thisActivity is the current activity
-        /*int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck1 != PackageManager.PERMISSION_GRANTED || permissionCheck2 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE}();
-        }
-        else
-            finishCreationStep(); */
+
     }
+    /*@Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadPictures();// permission was granted, yay!
+                    Log.v("loaded?","yes");
+                }
+                else{
+                    Log.v("loaded?","no");
+                }
+                return;
+            }
+        }
+    }*/
+    /*public void checkPermission()
+    {
+        int permissionCheck1 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck1 != PackageManager.PERMISSION_GRANTED || permissionCheck2 != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+    }*/
 
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
+
     public void loadPictures() {
-        String sdcard = Environment.getExternalStorageDirectory().toString();
+        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         File f = new File(sdcard);
         //test if the file directory is correct
+        Log.v("Path",sdcard);
+        Log.v("t?",f.canRead()+"");
         Log.v("Files",f.exists()+"");
         Log.v("Files",f.isDirectory()+"");
         Log.v("Files",f.listFiles()+"");
@@ -94,9 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
                 update(file.getName(),latitude,longitude);
-
                 //what trigger this kind of service??(Still not sure what to put in the background thread)
-                startIntentService(curLocation);
+                //startIntentService(curLocation);
             }
         }
     }
