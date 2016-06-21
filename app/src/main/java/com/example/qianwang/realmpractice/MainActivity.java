@@ -3,12 +3,15 @@ package com.example.qianwang.realmpractice;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.style.CharacterStyle;
@@ -57,14 +60,30 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        // Assume thisActivity is the current activity
+        /*int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck1 != PackageManager.PERMISSION_GRANTED || permissionCheck2 != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE}();
+        }
+        else
+            finishCreationStep(); */
     }
 
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
     public void loadPictures() {
-        File sdcard = Environment.getExternalStorageDirectory();
-        File[] files = sdcard.listFiles();
+        String sdcard = Environment.getExternalStorageDirectory().toString();
+        File f = new File(sdcard);
+        //test if the file directory is correct
+        Log.v("Files",f.exists()+"");
+        Log.v("Files",f.isDirectory()+"");
+        Log.v("Files",f.listFiles()+"");
+        File[] files = new File(sdcard).listFiles();
+
         //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
