@@ -39,6 +39,7 @@ import com.example.qianwang.realmpractice.Photo;
 
 public class MainActivity extends AppCompatActivity {
     private AddressResultReceiver mResultReceiver;
+    private Realm realm;
     Bundle bundle;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -50,18 +51,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
+
         // grant the permission at runtime
         final Button button = (Button)findViewById(R.id.load_photo);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 loadPictures();
+                RealmResults<Photo> results = realm.where(Photo.class).findAll();
+                    Log.v("show contents",results.size()+"");
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
     }
     /*@Override
     public void onRequestPermissionsResult(int requestCode,
@@ -101,14 +107,16 @@ public class MainActivity extends AppCompatActivity {
     public void loadPictures() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         File f = new File(sdcard);
-        //test if the file directory is correct
-        Log.v("Path",sdcard);
-        Log.v("t?",f.canRead()+"");
-        Log.v("Files",f.exists()+"");
-        Log.v("Files",f.isDirectory()+"");
-        Log.v("Files",f.listFiles()+"");
-        File[] files = new File(sdcard).listFiles();
+        Photo photo = new Photo();
+        photo.setLongitude(1.0);
+        photo.setId("whole foods");
+        photo.setLatitude(2.0);
+        realm.beginTransaction();
+        Photo photoUser = realm.copyToRealm(photo);
+        realm.commitTransaction();
 
+        //test if the file directory is correct
+        File[] files = new File(sdcard).listFiles();
         //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
@@ -118,10 +126,12 @@ public class MainActivity extends AppCompatActivity {
                 Location curLocation = readGeoTagImage(imagePath);
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
-                update(file.getName(),latitude,longitude);
+
+
                 //what trigger this kind of service??(Still not sure what to put in the background thread)
                 //startIntentService(curLocation);
             }
+
         }
     }
 
@@ -132,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         startService(intent);
     }
+
     // update in the database
-    public void update(String id,double latitude,double longitude){
+    /* public void update(String id,double latitude,double longitude){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         Photo photo = realm.createObject(Photo.class);
@@ -141,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
         photo.setId(id);
         photo.setLongitude(longitude);
         realm.commitTransaction();
-    }
+    }*/
+
     // the function that returns the location object
     public Location readGeoTagImage(String imagePath) {
         Location loc = new Location("");
@@ -201,8 +213,14 @@ public class MainActivity extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+
     }
 
+    /*@Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }*/
     //
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
