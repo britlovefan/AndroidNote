@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadPictures();
                 RealmResults<Photo> results = realm.where(Photo.class).findAll();
-                    Log.v("show contents",results.size()+"");
+                    Log.v("show length of data",results.size()+"");
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -105,34 +105,33 @@ public class MainActivity extends AppCompatActivity {
     // if not using emulator
 
     public void loadPictures() {
-        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
-        File f = new File(sdcard);
-        Photo photo = new Photo();
-        photo.setLongitude(1.0);
-        photo.setId("whole foods");
-        photo.setLatitude(2.0);
-        realm.beginTransaction();
-        Photo photoUser = realm.copyToRealm(photo);
-        realm.commitTransaction();
-
-        //test if the file directory is correct
+        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/pictures";
         File[] files = new File(sdcard).listFiles();
+        int count = 0;
         //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
-            String[] bits = file.getName().split(".");
-            if (bits.length > 0 && bits[bits.length - 1].equalsIgnoreCase("jpg")) {
+            String[] bits = file.getName().split("\\.");
+            if (bits.length>0&&bits[bits.length - 1].equalsIgnoreCase("jpg")) {
                 String imagePath = file.getAbsolutePath();
                 Location curLocation = readGeoTagImage(imagePath);
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
-
+                Photo photo = new Photo();
+                photo.setLongitude(longitude);
+                photo.setId(file.getName());
+                photo.setLatitude(latitude);
+                realm.beginTransaction();
+                Photo photoUser = realm.copyToRealm(photo);
+                realm.commitTransaction();
 
                 //what trigger this kind of service??(Still not sure what to put in the background thread)
                 //startIntentService(curLocation);
             }
-
+            count++;
         }
+        Log.v("count",count+"");
+
     }
 
     // start intent service for each GPS data pair
@@ -216,11 +215,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*@Override
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
-    }*/
+    }
     //
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
