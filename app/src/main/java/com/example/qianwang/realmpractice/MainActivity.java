@@ -55,11 +55,20 @@ public class MainActivity extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
 
-        // grant the permission at runtime
+
         final Button button = (Button)findViewById(R.id.load_photo);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                //delete the data from last run on the table
+                final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        results1.deleteAllFromRealm();
+                    }
+                });
+                //
                 loadPictures();
                 RealmResults<Photo> results = realm.where(Photo.class).findAll();
                     Log.v("show length of data",results.size()+"");
@@ -117,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
                 Location curLocation = readGeoTagImage(imagePath);
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
+                String time = curLocation.getTime()+"";
                 Photo photo = new Photo();
+                photo.setTimeStamp(time);
                 photo.setLongitude(longitude);
                 photo.setId(file.getName());
                 photo.setLatitude(latitude);
@@ -128,9 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 //what trigger this kind of service??(Still not sure what to put in the background thread)
                 //startIntentService(curLocation);
             }
-            count++;
         }
-        Log.v("count",count+"");
+
 
     }
 
@@ -212,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
-
     }
 
     @Override
