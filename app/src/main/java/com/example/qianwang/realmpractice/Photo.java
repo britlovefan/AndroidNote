@@ -44,5 +44,4 @@ public class Photo extends RealmObject {
     public void setZipCode(String zipCode){this.zipCode = zipCode;}
     public String getZipCode(){return zipCode;}
 
-
 }

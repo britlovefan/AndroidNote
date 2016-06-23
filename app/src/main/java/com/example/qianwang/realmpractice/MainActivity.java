@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         File[] files = new File(sdcard).listFiles();
         Log.v("data size",files.length+"");
         int count = 0;
-        //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
             String[] bits = file.getName().split("\\.");
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                     realm.commitTransaction();
                     startIntentService(curLocation,file.getName());
                 }
-                // What triggered the intent? Confused
             }
         }
     }
@@ -189,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();

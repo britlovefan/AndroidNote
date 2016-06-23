@@ -45,12 +45,6 @@ public class FetchAddress extends IntentService {
                 Constants.LOCATION_DATA_EXTRA);
         try {
             possibleAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-            /*String address = possibleAddress.get(0).getAddressLine(0);
-            String state = possibleAddress.get(0).getAdminArea();
-            String country = possibleAddress.get(0).getCountryName();
-            String postalCode = possibleAddress.get(0).getPostalCode();
-            String knownName = possibleAddress.get(0).getFeatureName();*/
-
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             errorMessage = getString(R.string.service_not_available);

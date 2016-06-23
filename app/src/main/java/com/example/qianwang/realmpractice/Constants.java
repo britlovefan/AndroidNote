@@ -1,7 +1,7 @@
 package com.example.qianwang.realmpractice;
 
 /**
- * Created by qianwang on 6/17/16.
+ * Created by qianwang on 6/17/16. The class for use to specify String of Intent Extra
  */
 public final class Constants {
     public static final int SUCCESS_RESULT = 0;
