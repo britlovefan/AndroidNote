@@ -2,6 +2,7 @@ package com.example.qianwang.realmpractice;
 import android.support.v4.media.MediaMetadataCompat;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
@@ -9,10 +10,12 @@ import io.realm.annotations.Required;
  * Created by qianwang on 6/17/16.
  */
 public class Photo extends RealmObject {
+    @PrimaryKey
     private String id;
-    private String timeStamp;
+    private Long timeStamp;
     private double Latitude;
     private double Longitude;
+
 
     public String getId() {
         return id;
@@ -20,10 +23,10 @@ public class Photo extends RealmObject {
     public void setId(String id) {
         this.id = id;
     }
-    public String getTimeStamp(){
+    public Long getTimeStamp(){
         return timeStamp;
     }
-    public void setTimeStamp(String timeStamp){
+    public void setTimeStamp(Long timeStamp){
         this.timeStamp = timeStamp;
     }
     public double getLatitude() {
@@ -38,4 +41,5 @@ public class Photo extends RealmObject {
     public void setLongitude(double Longitude) {
         this.Longitude = Longitude;
     }
+
 }

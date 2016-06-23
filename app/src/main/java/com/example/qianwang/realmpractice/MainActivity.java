@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -51,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+        final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
+                .build();
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
-
 
         final Button button = (Button)findViewById(R.id.load_photo);
         button.setOnClickListener(new View.OnClickListener(){
@@ -126,21 +127,18 @@ public class MainActivity extends AppCompatActivity {
                 Location curLocation = readGeoTagImage(imagePath);
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
-                String time = curLocation.getTime()+"";
                 Photo photo = new Photo();
-                photo.setTimeStamp(time);
+                photo.setTimeStamp(curLocation.getTime());
                 photo.setLongitude(longitude);
                 photo.setId(file.getName());
                 photo.setLatitude(latitude);
                 realm.beginTransaction();
                 Photo photoUser = realm.copyToRealm(photo);
                 realm.commitTransaction();
-
                 //what trigger this kind of service??(Still not sure what to put in the background thread)
                 //startIntentService(curLocation);
             }
         }
-
 
     }
 
