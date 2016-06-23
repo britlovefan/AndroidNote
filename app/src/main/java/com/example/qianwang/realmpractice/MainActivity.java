@@ -115,31 +115,34 @@ public class MainActivity extends AppCompatActivity {
     // if not using emulator
 
     public void loadPictures() {
-        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/pictures";
+        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         File[] files = new File(sdcard).listFiles();
+        Log.v("data size",files.length+"");
         int count = 0;
         //File[] files = new File("/Users/qianwang/Desktop/pictures").listFiles();
         for (File file : files) {
             if (!file.isFile()) continue;
             String[] bits = file.getName().split("\\.");
-            if (bits.length>0&&bits[bits.length - 1].equalsIgnoreCase("jpg")) {
+            if (bits.length > 0 && bits[bits.length - 1].equalsIgnoreCase("jpg")) {
                 String imagePath = file.getAbsolutePath();
                 Location curLocation = readGeoTagImage(imagePath);
                 double latitude = curLocation.getLatitude();
                 double longitude = curLocation.getLongitude();
-                Photo photo = new Photo();
-                photo.setTimeStamp(curLocation.getTime());
-                photo.setLongitude(longitude);
-                photo.setId(file.getName());
-                photo.setLatitude(latitude);
-                realm.beginTransaction();
-                Photo photoUser = realm.copyToRealm(photo);
-                realm.commitTransaction();
-                //what trigger this kind of service??(Still not sure what to put in the background thread)
-                //startIntentService(curLocation);
+                long time = curLocation.getTime();
+                if (latitude != 0 && longitude != 0 && time != 0) {
+                    Photo photo = new Photo();
+                    photo.setTimeStamp(time);
+                    photo.setLongitude(longitude);
+                    photo.setId(file.getName());
+                    photo.setLatitude(latitude);
+                    realm.beginTransaction();
+                    Photo photoUser = realm.copyToRealm(photo);
+                    realm.commitTransaction();
+                    //what trigger this kind of service??(Still not sure what to put in the background thread)
+                    //startIntentService(curLocation);
+                }
             }
         }
-
     }
 
     // start intent service for each GPS data pair
@@ -149,17 +152,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         startService(intent);
     }
-
-    // update in the database
-    /* public void update(String id,double latitude,double longitude){
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        Photo photo = realm.createObject(Photo.class);
-        photo.setLatitude(latitude);
-        photo.setId(id);
-        photo.setLongitude(longitude);
-        realm.commitTransaction();
-    }*/
 
     // the function that returns the location object
     public Location readGeoTagImage(String imagePath) {
@@ -173,7 +165,12 @@ public class MainActivity extends AppCompatActivity {
             }
             String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
             SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            if(date!=null){
             loc.setTime(fmt_Exif.parse(date).getTime());
+            }
+            else{
+                Log.v("file is null",imagePath+"");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
