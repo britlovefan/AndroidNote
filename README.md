@@ -1,5 +1,5 @@
-# AndroidNote
+# App that tracks your movement throughout the year
 
-###My question
-How can we pass the data back to IntentService? I mean where are the address data, can we just return it? Or we should manage the data 
-passed to AddressResultReceiver and update the information in database?
+### MileStone 1 
+Get familiar with Realm.io and retrieve the GPS data from the Pictures/
+
