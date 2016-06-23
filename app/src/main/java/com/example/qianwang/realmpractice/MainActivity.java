@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -30,18 +31,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import com.example.qianwang.realmpractice.Photo;
+import com.google.android.gms.vision.barcode.Barcode;
 
 
 public class MainActivity extends AppCompatActivity {
-    private AddressResultReceiver mResultReceiver;
+    public AddressResultReceiver mResultReceiver;
+    private String locationId;
     private Realm realm;
     Bundle bundle;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -138,18 +143,20 @@ public class MainActivity extends AppCompatActivity {
                     realm.beginTransaction();
                     Photo photoUser = realm.copyToRealm(photo);
                     realm.commitTransaction();
-                    //what trigger this kind of service??(Still not sure what to put in the background thread)
-                    //startIntentService(curLocation);
+                    startIntentService(curLocation,file.getName());
                 }
+                // What triggered the intent? Confused
             }
         }
     }
 
     // start intent service for each GPS data pair
-    protected void startIntentService(Location location) {
+    protected void startIntentService(Location location,String id) {
         Intent intent = new Intent(this, FetchAddress.class);
+        mResultReceiver = new AddressResultReceiver(new Handler());
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        intent.putExtra(Constants.LOCATION_ID,id);
         startService(intent);
     }
 
@@ -224,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         realm.close();
     }
+
     //
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
@@ -233,15 +241,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            String mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            //Deal with the addressoutput here
-
-            // Show a toast message if an address was found.
+             List<Address> addresses = new ArrayList<>();
+             addresses = resultData.getParcelableArrayList(Constants.RESULT_DATA_KEY);
+             String zipCode = addresses.get(0).getPostalCode();
+             String name = resultData.getString(Constants.LOCATION_ID);
             if (resultCode == Constants.SUCCESS_RESULT) {
-                Context context = getApplicationContext();
-                CharSequence text = getString(R.string.address_found);
-                Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-                toast.show();
+                Photo p = realm.where(Photo.class).equalTo("id",name).findFirst();
+                realm.beginTransaction();
+                p.setZipCode(zipCode);
+                realm.commitTransaction();
             }
         }
     }

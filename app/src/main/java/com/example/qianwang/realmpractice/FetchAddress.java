@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,25 +25,31 @@ import java.util.Locale;
  */
 public class FetchAddress extends IntentService {
     private static final String TAG = "MyIntentService";
-    protected ResultReceiver mLocationReceiver;
+    public ResultReceiver mLocationReceiver;
     String errorMessage;
     List<Address> possibleAddress = null;
+    String locationId;
     public FetchAddress(){
         super("FetchAddress");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        mLocationReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+        if(mLocationReceiver==null){
+            Log.v("receiver","null");
+        }
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        locationId = intent.getStringExtra(Constants.LOCATION_ID);
         Location location = intent.getParcelableExtra(
                 Constants.LOCATION_DATA_EXTRA);
         try {
             possibleAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-            String address = possibleAddress.get(0).getAddressLine(0);
+            /*String address = possibleAddress.get(0).getAddressLine(0);
             String state = possibleAddress.get(0).getAdminArea();
             String country = possibleAddress.get(0).getCountryName();
             String postalCode = possibleAddress.get(0).getPostalCode();
-            String knownName = possibleAddress.get(0).getFeatureName();
+            String knownName = possibleAddress.get(0).getFeatureName();*/
 
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
@@ -62,24 +69,19 @@ public class FetchAddress extends IntentService {
                 errorMessage = getString(R.string.no_address_found);
                 Log.e(TAG, errorMessage);
             }
-            deliverResult(Constants.FAILURE_RESULT, errorMessage);
+            deliverResult(Constants.FAILURE_RESULT, null,null);
         } else {
             Address address = possibleAddress.get(0);
-            ArrayList<String> addressFragments = new ArrayList<String>();
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                addressFragments.add(address.getAddressLine(i));
-            }
             Log.i(TAG, getString(R.string.address_found));
-            deliverResult(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"),
-                            addressFragments));
+            deliverResult(Constants.SUCCESS_RESULT,possibleAddress,locationId);
         }
         }
     //deliver the result code revealing whether the address have been successfully retrieved
     //Along with the address itself
-    private void deliverResult(int resultCode,String message){
+    private void deliverResult(int resultCode,List<Address> Address,String id){
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.RESULT_DATA_KEY, message);
+        bundle.putParcelableArrayList(Constants.RESULT_DATA_KEY, (ArrayList<? extends Parcelable>) Address);
+        bundle.putString(Constants.LOCATION_ID,id);
         mLocationReceiver.send(resultCode, bundle);
     }
 }

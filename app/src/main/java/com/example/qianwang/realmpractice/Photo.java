@@ -15,7 +15,7 @@ public class Photo extends RealmObject {
     private Long timeStamp;
     private double Latitude;
     private double Longitude;
-
+    private String zipCode;
 
     public String getId() {
         return id;
@@ -41,5 +41,8 @@ public class Photo extends RealmObject {
     public void setLongitude(double Longitude) {
         this.Longitude = Longitude;
     }
+    public void setZipCode(String zipCode){this.zipCode = zipCode;}
+    public String getZipCode(){return zipCode;}
+
 
 }
