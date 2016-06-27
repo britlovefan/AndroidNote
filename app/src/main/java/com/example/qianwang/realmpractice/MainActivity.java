@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //delete the data from last run on the table
                 final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
+                RealmResults<Photo> result = realm.where(Photo.class).findAll();
+                // 6/27 Tring to sort the result by time
+                result = result.sort("timeStamp");
+                Log.v("The first Element",result.get(0).getId()+"");
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -238,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-             List<Address> addresses = new ArrayList<>();
+             List<Address> addresses;
              addresses = resultData.getParcelableArrayList(Constants.RESULT_DATA_KEY);
              String zipCode = addresses.get(0).getPostalCode();
              String name = resultData.getString(Constants.LOCATION_ID);
