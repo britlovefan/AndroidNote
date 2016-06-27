@@ -1,6 +1,6 @@
 # Your Secret Tracker
 
-## MileStone 1 --- Week 1 
+#### MileStone 1 --- Week 1 
 Get familiar with Realm.io and retrieve the GPS data from the Pictures/
 
 ## MileStone 2 --- Week 2
