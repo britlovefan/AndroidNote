@@ -69,123 +69,38 @@ public class MainActivity extends AppCompatActivity {
                 //delete the data from last run on the table
                 final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
                 RealmResults<Photo> result = realm.where(Photo.class).findAll();
-                // 6/27 Tring to sort the result by time
-                result = result.sort("timeStamp");
-                Log.v("The first Element",result.get(0).getId()+"");
+                // 6/27 Trying to sort the result by time
+                /*result = result.sort("timeStamp");
+                Log.v("The first Element",result.get(0).getId()+"");*/
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
                         results1.deleteAllFromRealm();
                     }
                 });
-                //
                 loadPictures();
-                RealmResults<Photo> results = realm.where(Photo.class).findAll();
-                    Log.v("show length of data",results.size()+"");
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    loadPictures();// permission was granted, yay!
-                    Log.v("loaded?","yes");
-                }
-                else{
-                    Log.v("loaded?","no");
-                }
-                return;
-            }
-        }
-    }*/
-    /*public void checkPermission()
-    {
-        int permissionCheck1 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck1 != PackageManager.PERMISSION_GRANTED || permissionCheck2 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        }
-    }*/
 
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
-
     public void loadPictures() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
-        File[] files = new File(sdcard).listFiles();
-        Log.v("data size",files.length+"");
-        int count = 0;
-        for (File file : files) {
-            if (!file.isFile()) continue;
-            String[] bits = file.getName().split("\\.");
-            if (bits.length > 0 && bits[bits.length - 1].equalsIgnoreCase("jpg")) {
-                String imagePath = file.getAbsolutePath();
-                Location curLocation = readGeoTagImage(imagePath);
-                double latitude = curLocation.getLatitude();
-                double longitude = curLocation.getLongitude();
-                long time = curLocation.getTime();
-                if (latitude != 0 && longitude != 0 && time != 0) {
-                    Photo photo = new Photo();
-                    photo.setTimeStamp(time);
-                    photo.setLongitude(longitude);
-                    photo.setId(file.getName());
-                    photo.setLatitude(latitude);
-                    realm.beginTransaction();
-                    Photo photoUser = realm.copyToRealm(photo);
-                    realm.commitTransaction();
-                    startIntentService(curLocation,file.getName());
-                }
-            }
-        }
+        startIntentService(sdcard);
     }
 
     // start intent service for each GPS data pair
-    protected void startIntentService(Location location,String id) {
+    protected void startIntentService(String id) {
         Intent intent = new Intent(this, FetchAddress.class);
         mResultReceiver = new AddressResultReceiver(new Handler());
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
-        intent.putExtra(Constants.LOCATION_ID,id);
+        intent.putExtra(Constants.FILE_ID,id);
         startService(intent);
-    }
-
-    // the function that returns the location object
-    public Location readGeoTagImage(String imagePath) {
-        Location loc = new Location("");
-        try {
-            ExifInterface exif = new ExifInterface(imagePath);
-            float[] latlong = new float[2];
-            if (exif.getLatLong(latlong)) {
-                loc.setLatitude(latlong[0]);
-                loc.setLongitude(latlong[1]);
-            }
-            String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
-            SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-            if(date!=null){
-            loc.setTime(fmt_Exif.parse(date).getTime());
-            }
-            else{
-                Log.v("file is null",imagePath+"");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return loc;
     }
 
     @Override
@@ -232,26 +147,21 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         realm.close();
     }
-
     //
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
-
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-             List<Address> addresses;
-             addresses = resultData.getParcelableArrayList(Constants.RESULT_DATA_KEY);
-             String zipCode = addresses.get(0).getPostalCode();
-             String name = resultData.getString(Constants.LOCATION_ID);
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                Photo p = realm.where(Photo.class).equalTo("id",name).findFirst();
-                realm.beginTransaction();
-                p.setZipCode(zipCode);
-                realm.commitTransaction();
-            }
+            String result = resultData.getString(Constants.PROCESSED_ID);
+            // Want to make a toast message to the user
+            Context context = getApplicationContext();
+            CharSequence text = result;
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 }
