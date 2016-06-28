@@ -24,6 +24,7 @@ import com.example.qianwang.realmpractice.model.Photo;
 
 public class MainActivity extends AppCompatActivity {
     public AddressResultReceiver mResultReceiver;
+    public RealmResults<Photo> result;
     private String locationId;
     private Realm realm;
     Bundle bundle;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
         final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-        RealmResults<Photo> result = realm.where(Photo.class).findAll();
         // 6/27 Trying to sort the result by time
                 /*result = result.sort("timeStamp");
                 Log.v("The first Element",result.get(0).getId()+"");*/

@@ -1,10 +1,25 @@
 package com.example.qianwang.realmpractice;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.qianwang.realmpractice.model.Photo;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 /**
  * Created by qianwang on 6/28/16.
@@ -13,13 +28,20 @@ public class ShowTimeline extends AppCompatActivity {
     private static final int daysInMonth= 31;
     private SeekBar seekBar;
     private TextView daysDisplay;
+    private TextView LocationDisplay;
+    private RealmResults<Photo> results;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_map);
-        seekBar = (SeekBar)findViewById(R.id.seekBar1);
-        daysDisplay = (TextView)findViewById(R.id.days);
+        InitializeView();
+        final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+        Realm realm = Realm.getDefaultInstance();
+        results = realm.where(Photo.class).findAll();
+        results = results.sort("timeStamp");
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             int progress = 0;
             @Override
@@ -27,7 +49,6 @@ public class ShowTimeline extends AppCompatActivity {
                 progress = progressVal;
                 Toast.makeText(getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 Toast.makeText(getApplicationContext(), "Started tracking seekbar", Toast.LENGTH_SHORT).show();
@@ -35,14 +56,36 @@ public class ShowTimeline extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                setText(progress);
+                int length = results.size();
+                Log.v("length",length+"");
+                //int index = progress/seekBar.getMax()*length;
+                int index = (progress*length)/seekBar.getMax();
+                String name = results.get(index).getId();
+                long dateTime = results.get(index).getTimeStamp();
+                String zipCode = results.get(index).getZipCode();
+                String dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(dateTime));
+                setText(dateString,zipCode);
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/"+name;
+                File imgFile = new  File(filePath);
+                if(imgFile.exists()){
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    ImageView myImage = (ImageView) findViewById(R.id.imageView);
+                    myImage.setImageBitmap(myBitmap);
+                }
                 Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    protected void setText(int progress) {
-        int months = progress / daysInMonth + 1;
+    protected void InitializeView(){
+        seekBar = (SeekBar)findViewById(R.id.seekBar1);
+        daysDisplay = (TextView)findViewById(R.id.days);
+        LocationDisplay = (TextView)findViewById(R.id.address);
+    }
+    // show the exact date/time in the left text view and display the
+    protected void setText(String dateTime,String dataString) {
+        daysDisplay.setText(dateTime);
+        LocationDisplay.setText(dataString);
+        /*int months = progress / daysInMonth + 1;
         String monthString;
         switch (months) {
             case 1:
@@ -85,9 +128,8 @@ public class ShowTimeline extends AppCompatActivity {
                 monthString = "Invalid month";
                 break;
         }
-        daysDisplay.setText(monthString);
+        daysDisplay.setText(monthString);*/
     }
-
 
 
 }
