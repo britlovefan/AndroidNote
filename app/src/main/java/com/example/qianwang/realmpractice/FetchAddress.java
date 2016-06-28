@@ -2,25 +2,20 @@ package com.example.qianwang.realmpractice;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.qianwang.realmpractice.model.Photo;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 

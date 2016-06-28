@@ -9,24 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.qianwang.realmpractice.MainActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Load Photos"
-        android:id="@+id/load_photo"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="107dp" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="GIS Traking "
         android:id="@+id/textView"
-        android:layout_marginTop="107dp"
+        android:layout_marginTop="112dp"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/load_photo"
-        android:layout_alignStart="@+id/load_photo" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

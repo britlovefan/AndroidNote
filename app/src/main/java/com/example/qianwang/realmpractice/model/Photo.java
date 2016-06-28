@@ -1,4 +1,4 @@
-package com.example.qianwang.realmpractice;
+package com.example.qianwang.realmpractice.model;
 import android.support.v4.media.MediaMetadataCompat;
 
 import io.realm.RealmObject;

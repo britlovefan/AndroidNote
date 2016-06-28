@@ -3,42 +3,23 @@ package com.example.qianwang.realmpractice;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Location;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.style.CharacterStyle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.Sort;
-import com.example.qianwang.realmpractice.Photo;
-import com.google.android.gms.vision.barcode.Barcode;
+
+import com.example.qianwang.realmpractice.model.Photo;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,26 +42,18 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
-
-        final Button button = (Button)findViewById(R.id.load_photo);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                //delete the data from last run on the table
-                final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-                RealmResults<Photo> result = realm.where(Photo.class).findAll();
-                // 6/27 Trying to sort the result by time
+        final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
+        RealmResults<Photo> result = realm.where(Photo.class).findAll();
+        // 6/27 Trying to sort the result by time
                 /*result = result.sort("timeStamp");
                 Log.v("The first Element",result.get(0).getId()+"");*/
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        results1.deleteAllFromRealm();
-                    }
-                });
-                loadPictures();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results1.deleteAllFromRealm();
             }
         });
+        loadPictures();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -89,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
-    public void loadPictures() {
+    private void loadPictures() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
     }
@@ -162,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+            //start another activity page
+            startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
         }
     }
 }
