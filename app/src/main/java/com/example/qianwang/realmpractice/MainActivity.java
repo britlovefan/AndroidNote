@@ -1,14 +1,17 @@
 package com.example.qianwang.realmpractice;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public RealmResults<Photo> result;
     private String locationId;
     private Realm realm;
+    private ProgressBar progressBar;
+    private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
     Bundle bundle;
 
     /**
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -65,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
     private void loadPictures() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
+        //register receiver
+        myBroadcastReceiver_Update = new MyBroadcastReceiver_Update();
+        IntentFilter intentFilter_update = new IntentFilter(Constants.UPDATE);
+        intentFilter_update.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(myBroadcastReceiver_Update, intentFilter_update);
     }
 
     // start intent service for each GPS data pair
@@ -118,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //unregister receiver
+        unregisterReceiver(myBroadcastReceiver_Update);
         realm.close();
     }
     //
@@ -129,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             String result = resultData.getString(Constants.PROCESSED_ID);
+
+            int count = resultData.getInt(Constants.TOTAL_NUM);
+            progressBar.setMax(count);
+
             // Want to make a toast message to the user
             Context context = getApplicationContext();
             CharSequence text = result;
@@ -136,7 +153,15 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             //start another activity page
-            startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+            //startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+        }
+    }
+    //Trying to implement the progress bar
+    public class MyBroadcastReceiver_Update extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int update = intent.getIntExtra(Constants.INTENT_UPDATE, 0);
+            progressBar.setProgress(update);
         }
     }
 }

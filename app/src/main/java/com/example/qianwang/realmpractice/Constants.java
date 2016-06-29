@@ -17,4 +17,7 @@ public final class Constants {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static final String PROCESSED_ID = PACKAGE_NAME +  "PROCESSED_ID";
+    public static final String INTENT_UPDATE = PACKAGE_NAME + "INTENT_UPDATE";
+    public static final String UPDATE = PACKAGE_NAME +"UPDATE";
+    public static final String TOTAL_NUM = PACKAGE_NAME + "TOTAL_NUM";
 }

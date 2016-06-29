@@ -19,4 +19,15 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/progressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="112dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:indeterminate="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

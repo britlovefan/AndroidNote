@@ -59,7 +59,7 @@ public class ShowTimeline extends AppCompatActivity {
                 int length = results.size();
                 Log.v("length",length+"");
                 //int index = progress/seekBar.getMax()*length;
-                int index = (progress*length)/seekBar.getMax();
+                int index = (progress*(length-1))/seekBar.getMax();
                 String name = results.get(index).getId();
                 long dateTime = results.get(index).getTimeStamp();
                 String zipCode = results.get(index).getZipCode();

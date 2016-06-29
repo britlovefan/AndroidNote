@@ -52,6 +52,9 @@ public class FetchAddress extends IntentService {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         locationId = intent.getStringExtra(Constants.LOCATION_ID);
 
+        Intent intentUpdate = new Intent();
+        intentUpdate.setAction(Constants.UPDATE);
+
         String sdcard = intent.getStringExtra(Constants.FILE_ID);
         File[] files = new File(sdcard).listFiles();
         Log.v("data size", files.length + "");
@@ -87,12 +90,13 @@ public class FetchAddress extends IntentService {
                             errorMessage = getString(R.string.no_address_found);
                             Log.e(TAG, errorMessage);
                         }
-                        deliverResult(Constants.FAILURE_RESULT);
+                        deliverResult(Constants.FAILURE_RESULT,0);
                     } else {
+                        count++;
                         Address address = possibleAddress.get(0);
                         //Log.i(TAG, getString(R.string.address_found));
                         //perform the add  zipcode column not by finding
-                        zipCode = address.getPostalCode();
+                        zipCode = address.getLocality();
                         Photo photo = new Photo();
                         photo.setId(name);
                         photo.setTimeStamp(time);
@@ -102,21 +106,25 @@ public class FetchAddress extends IntentService {
                         realm.beginTransaction();
                         Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
                         realm.commitTransaction();
+
+                        intentUpdate.putExtra(Constants.INTENT_UPDATE, count);
+                        sendBroadcast(intentUpdate);
                     }
                 }
             }
         }
-        deliverResult(Constants.SUCCESS_RESULT);
+        deliverResult(Constants.SUCCESS_RESULT,count);
         RealmResults<Photo> results = realm.where(Photo.class).findAll();
         Log.v("show length of data",results.size()+"");
         realm.close();
     }
 
     //deliver the result code revealing whether the address have been successfully retrieved
-    //Along with the address itself
-    private void deliverResult(int resultCode) {
+    //deliver the total number of photo processed by the database
+    private void deliverResult(int resultCode,int count) {
         Bundle bundle = new Bundle();
         if(resultCode == 0) {
+            bundle.putInt(Constants.TOTAL_NUM,count);
             bundle.putString(Constants.PROCESSED_ID, "We have processed your photo");
         }
         else{
