@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             //start another activity page
-            //startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+            startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
         }
     }
     //Trying to implement the progress bar
