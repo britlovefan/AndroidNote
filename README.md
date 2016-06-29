@@ -9,9 +9,16 @@ Retrieve the Location Data from the GPS info in the background, included Zipcode
 #### MileStone 3 --- Week 3 (Going On:))
 Thinking of what kind of feature you want to employ:
 
-The BASIC: Make an animation of your Location move according to time, on the map show your movement 
+Implemented a SeekBar TimeLine that could allow the user to search the photo by moving across the bar, but doesn't 
+include search for a specific month.
 
-? By Location: Group it together according to location?
+#####Next Step:
+By Location: Group it together according to location, which involves the cluster technique: How to show large amount of data on map
+
+- The unseen part should not be generated
+- The cluster with more places should be a bigger icon with the corresponding number
+- Which Algorithms to choose, anything to do with the index of the database(layer)
+
 
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
