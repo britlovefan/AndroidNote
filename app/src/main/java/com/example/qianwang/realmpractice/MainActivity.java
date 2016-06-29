@@ -9,9 +9,15 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private Realm realm;
     private ProgressBar progressBar;
     private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
+    private Button loadButton;
+    private TextView status;
     Bundle bundle;
 
     /**
@@ -42,9 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Tried to make the app full screen
+        /*requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        loadButton = (Button)findViewById(R.id.loadButton);
+        status = (TextView)findViewById(R.id.loadStatus);
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -59,7 +75,14 @@ public class MainActivity extends AppCompatActivity {
                 results1.deleteAllFromRealm();
             }
         });
-        loadPictures();
+        loadButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                loadPictures();
+            }
+        });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -69,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
     private void loadPictures() {
+        status.setText("We Are Busy Loading Your Photos...");
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
         //register receiver
