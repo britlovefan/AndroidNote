@@ -48,9 +48,10 @@ public class ShowTimeline extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
         results = realm.where(Photo.class).findAll();
+        Log.v("timeline total",results.size()+"");
         results = results.sort("timeStamp");
 
-        backToMenu.setOnClickListener(new View.OnClickListener() {
+        /*backToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ShowTimeline.this, MainActivity.class);
@@ -58,7 +59,7 @@ public class ShowTimeline extends AppCompatActivity {
                 startActivity(intent);
                 //back to the home activity
             }
-        });
+        });*/
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             int progress = 0;
@@ -98,7 +99,7 @@ public class ShowTimeline extends AppCompatActivity {
         seekBar = (SeekBar)findViewById(R.id.seekBar1);
         daysDisplay = (TextView)findViewById(R.id.days);
         LocationDisplay = (TextView)findViewById(R.id.address);
-        backToMenu = (Button)findViewById(R.id.backToMain);
+        //backToMenu = (Button)findViewById(R.id.backToMain);
     }
     // show the exact date/time in the left text view and display the
     protected void setText(String dateTime,String dataString) {

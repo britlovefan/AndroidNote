@@ -42,8 +42,20 @@
         android:layout_height="wrap_content"
         android:text="Load Photo"
         android:id="@+id/loadButton"
-        android:layout_above="@+id/loadStatus"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="38dp" />
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="75dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Map"
+        android:id="@+id/clusterButton"
+        android:layout_below="@+id/loadButton"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignLeft="@+id/loadButton"
+        android:layout_alignStart="@+id/loadButton" />
 
 </RelativeLayout>

@@ -35,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
     public AddressResultReceiver mResultReceiver;
     public RealmResults<Photo> result;
     private String locationId;
-    private Realm realm;
+    public Realm realm;
     private ProgressBar progressBar;
     private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
     private Button loadButton;
+    private Button mapCluster;
     private TextView status;
     Bundle bundle;
 
@@ -59,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         actionBar.hide();
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         loadButton = (Button)findViewById(R.id.loadButton);
+        mapCluster = (Button)findViewById(R.id.clusterButton);
         status = (TextView)findViewById(R.id.loadStatus);
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
@@ -82,7 +85,16 @@ public class MainActivity extends AppCompatActivity {
                 loadPictures();
             }
         });
-
+        //go to the cluster mode
+        mapCluster.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MapCluster.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -92,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
     private void loadPictures() {
+        progressBar.setVisibility(View.VISIBLE);
         status.setText("We Are Busy Loading Your Photos...");
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);

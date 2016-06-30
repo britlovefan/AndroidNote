@@ -57,7 +57,7 @@ public class FetchAddress extends IntentService {
 
         String sdcard = intent.getStringExtra(Constants.FILE_ID);
         File[] files = new File(sdcard).listFiles();
-        Log.v("data size", files.length + "");
+        //Log.v("data size", files.length + "");
         int count = 0;
         for (File file : files) {
             if (!file.isFile()) continue;

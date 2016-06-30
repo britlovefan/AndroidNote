@@ -18,7 +18,7 @@
         <service android:name = ".FetchAddress"
         android:exported = "false"/>
         <activity android:name=".ShowTimeline" />
-
+        <activity android:name=".MapCluster"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +30,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDS5vjSW6O8JAw_ZGVMkzbwk4FURwog59w"/>
 
     </application>
 
