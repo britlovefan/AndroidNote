@@ -11,7 +11,7 @@ Thinking of what kind of feature you want to employ:
 
 Implemented a SeekBar TimeLine that could allow the user to search the photo by touching across the bar, but doesn't 
 include the function of searching photo/event for a specific month.
-
+Could display the location of photo on the map but didn't implement the cluster yet
 #####Next Step:
 By Location: Group it together according to location, which involves the cluster technique: How to show large amount of data on map
 
@@ -20,6 +20,7 @@ By Location: Group it together according to location, which involves the cluster
 (2)  By different zooming level, show the marker in different level, in the last level, show the small picture icon of each location
 
 (3)  In case of large database, ONLY mark the area that could be seen by the user, (what algorithms)
+
 - The unseen part should not be generated
 - The cluster with more places should be a bigger icon with the corresponding number
 - Which Algorithms to choose, anything to do with the index of the database(layer)
