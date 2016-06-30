@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public Realm realm;
     private ProgressBar progressBar;
     private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
-    private Button loadButton;
-    private Button mapCluster;
+    public Button loadButton;
     private TextView status;
     Bundle bundle;
 
@@ -59,11 +58,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         setContentView(R.layout.activity_main);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
-        loadButton = (Button)findViewById(R.id.loadButton);
-        mapCluster = (Button)findViewById(R.id.clusterButton);
-        status = (TextView)findViewById(R.id.loadStatus);
+        initializeView();
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
@@ -86,20 +81,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //go to the cluster mode
-        mapCluster.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapCluster.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
+    protected void initializeView(){
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+        loadButton = (Button)findViewById(R.id.loadButton);
+        //mapCluster = (Button)findViewById(R.id.clusterButton);
+        status = (TextView)findViewById(R.id.loadStatus);
+    }
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
@@ -190,7 +183,8 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             //start another activity page
-            startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+            //startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+            startActivity(new Intent(getApplicationContext(), OptionChooser.class));
         }
     }
     //Trying to implement the progress bar

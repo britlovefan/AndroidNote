@@ -29,7 +29,6 @@ import io.realm.RealmResults;
  * Created by qianwang on 6/28/16.
  */
 public class ShowTimeline extends AppCompatActivity {
-    private static final int daysInMonth= 31;
     private SeekBar seekBar;
     private TextView daysDisplay;
     private TextView LocationDisplay;
@@ -51,7 +50,7 @@ public class ShowTimeline extends AppCompatActivity {
         Log.v("timeline total",results.size()+"");
         results = results.sort("timeStamp");
 
-        /*backToMenu.setOnClickListener(new View.OnClickListener() {
+        backToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ShowTimeline.this, MainActivity.class);
@@ -59,7 +58,7 @@ public class ShowTimeline extends AppCompatActivity {
                 startActivity(intent);
                 //back to the home activity
             }
-        });*/
+        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             int progress = 0;
@@ -99,7 +98,7 @@ public class ShowTimeline extends AppCompatActivity {
         seekBar = (SeekBar)findViewById(R.id.seekBar1);
         daysDisplay = (TextView)findViewById(R.id.days);
         LocationDisplay = (TextView)findViewById(R.id.address);
-        //backToMenu = (Button)findViewById(R.id.backToMain);
+        backToMenu = (Button)findViewById(R.id.backToMain);
     }
     // show the exact date/time in the left text view and display the
     protected void setText(String dateTime,String dataString) {
