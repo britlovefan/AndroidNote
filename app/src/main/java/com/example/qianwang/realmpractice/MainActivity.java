@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
             //start another activity page
             //startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
+            //unseen the progressbar and the text
+            progressBar.setVisibility(View.INVISIBLE);
+            status.setText("");
             startActivity(new Intent(getApplicationContext(), OptionChooser.class));
         }
     }
