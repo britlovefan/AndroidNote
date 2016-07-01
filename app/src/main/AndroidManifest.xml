@@ -18,7 +18,7 @@
         <service android:name = ".FetchAddress"
         android:exported = "false"/>
         <activity android:name=".ShowTimeline" />
-        <activity android:name=".MapCluster"/>
+        <activity android:name=".map.MapCluster"/>
         <activity android:name=".OptionChooser"/>
         <activity android:name=".MainActivity">
             <intent-filter>
