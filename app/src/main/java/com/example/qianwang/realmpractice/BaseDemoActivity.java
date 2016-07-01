@@ -16,8 +16,10 @@
 
 package com.example.qianwang.realmpractice;
 
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,14 +28,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
-    protected int getLayoutId() {
-        return R.id.map;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
+        setContentView(R.layout.map_cluster);
         setUpMap();
     }
 
