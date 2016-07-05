@@ -6,24 +6,15 @@ Get familiar with Realm.io and retrieve the GPS data from the Pictures/
 #### MileStone 2 --- Week 2
 Retrieve the Location Data from the GPS info in the background, included Zipcode and State and City
 
-#### MileStone 3 --- Week 3 (Going On:))
-Thinking of what kind of feature you want to employ:
+#### MileStone 3 --- Week 3 
 
 Implemented a SeekBar TimeLine that could allow the user to search the photo by touching across the bar, but doesn't 
-include the function of searching photo/event for a specific month.
-Could display the location of photo on the map but didn't implement the cluster yet
-#####Next Step:
-By Location: Group it together according to location, which involves the cluster technique: How to show large amount of data on map
+Could display the location of photo on the map and implement a photo outlook cluster with the number of items on the icon
 
-(1)  Display the map, know how to perform the moving/enlarge gesture, how to show a marker
-
-(2)  By different zooming level, show the marker in different level, in the last level, show the small picture icon of each location
-
-(3)  In case of large database, ONLY mark the area that could be seen by the user, (what algorithms)
+#### MileStone 4 --- Week 4 (Going on:) )
 
 - The unseen part should not be generated
-- The cluster with more places should be a bigger icon with the corresponding number
-- Which Algorithms to choose, anything to do with the index of the database(layer)
+- Show the significant change(like a graph with arrows or on map: "You spent ____ days at ___ , you move to _____ at "
 
 
 #####The IMPROVEMENT: 
