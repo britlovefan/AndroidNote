@@ -5,9 +5,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qianwang.realmpractice.R;
@@ -42,7 +44,6 @@ import io.realm.RealmResults;
     @Override
     protected void startDemo() {
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
-        // Personalized the Renderer
         mClusterManager.setRenderer(new PhotoRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);
@@ -51,12 +52,14 @@ import io.realm.RealmResults;
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
         // Specify the Realm Database
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
         Realm realm = Realm.getInstance(config);
         results = realm.where(Photo.class).findAll();
         addItems();
+        mClusterManager.cluster();
     }
 
     private void addItems() {
@@ -65,7 +68,6 @@ import io.realm.RealmResults;
             //getMap().addMarker(new MarkerOptions().position(place));
             double lat = place.latitude;
             double lng = place.longitude;
-            // Add ten cluster items in close proximity, for purposes of this example.
                 MyItem offsetItem = new MyItem(lat,lng,photo.getId());
                 mClusterManager.addItem(offsetItem);
         }
@@ -76,11 +78,13 @@ import io.realm.RealmResults;
         private final ImageView mClusterImageView;
         private final int mDimension;
         private final ImageView mImageView;
+        private final TextView mTextView;
         public PhotoRenderer(){
             super(getApplicationContext(), getMap(), mClusterManager);
             View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile,null);
             mClusterIconGenerator.setContentView(multiProfile);
             mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
+            mTextView = (TextView) multiProfile.findViewById(R.id.amu_text);
 
             mImageView = new ImageView(getApplicationContext());
             mDimension = (int) getResources().getDimension(R.dimen.custom_profile_image);
@@ -104,7 +108,6 @@ import io.realm.RealmResults;
         @Override
         protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
-            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
@@ -121,14 +124,16 @@ import io.realm.RealmResults;
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
+            Log.v("number of clusters",cluster.getSize()+"");
+            mTextView.setText(String.valueOf(cluster.getSize()));
             mClusterImageView.setImageDrawable(multiDrawable);
+
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            // Always render clusters.
-            return cluster.getSize() > 0;
+            return true;
         }
     }
 
@@ -136,6 +141,8 @@ import io.realm.RealmResults;
     public boolean onClusterClick(Cluster<MyItem> cluster) {
         // Create the builder to collect all essential cluster items for the bounds.
         LatLngBounds.Builder builder = LatLngBounds.builder();
+        String firstName = cluster.getItems().iterator().next().fileName;
+        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
         for (ClusterItem item : cluster.getItems()) {
             builder.include(item.getPosition());
         }
