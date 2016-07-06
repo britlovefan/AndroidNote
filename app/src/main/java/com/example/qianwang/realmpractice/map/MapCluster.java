@@ -15,13 +15,19 @@ import android.widget.Toast;
 import com.example.qianwang.realmpractice.R;
 import com.example.qianwang.realmpractice.model.Photo;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.Algorithm;
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
+import com.google.maps.android.clustering.algo.StaticCluster;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
@@ -37,12 +43,16 @@ import io.realm.RealmResults;
  * Created by qianwang on 6/30/16.
  */
     public class MapCluster extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<MyItem>, ClusterManager.OnClusterInfoWindowClickListener<MyItem>, ClusterManager.OnClusterItemClickListener<MyItem>, ClusterManager.OnClusterItemInfoWindowClickListener<MyItem> {
-
+    private static int CAMERA_MOVE_REACT_THRESHOLD_MS = 500;
+    private long lastCallMs = Long.MIN_VALUE;
     private RealmResults<Photo> results;
     private ClusterManager<MyItem> mClusterManager;
+    //add a bound variable to store the Latlgn bound info
+    private LatLngBounds currentBounds;
 
     @Override
     protected void startDemo() {
+
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
         mClusterManager.setRenderer(new PhotoRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
@@ -52,13 +62,40 @@ import io.realm.RealmResults;
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        //mClusterManager.setAlgorithm(new GridBasedAlgorithm<MyItem>());
 
         // Specify the Realm Database
         final RealmConfiguration config = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded()
                 .build();
         Realm realm = Realm.getInstance(config);
         results = realm.where(Photo.class).findAll();
+        // Set the vision to the places where photos are located
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(results.get(0).getLatitude(),results.get(0).getLongitude()),10));
         addItems();
+        currentBounds = getMap().getProjection().getVisibleRegion().latLngBounds;
+        getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                LatLngBounds bounds = getMap().getProjection().getVisibleRegion().latLngBounds;
+                if (currentBounds.northeast.latitude == bounds.northeast.latitude
+                        && currentBounds.northeast.longitude == bounds.northeast.longitude
+                        && currentBounds.southwest.latitude == bounds.southwest.latitude
+                        && currentBounds.southwest.longitude == bounds.southwest.longitude) {
+                    return;
+                }
+                final long snap = System.currentTimeMillis();
+                if (lastCallMs + CAMERA_MOVE_REACT_THRESHOLD_MS > snap) {
+                    lastCallMs = snap;
+                    return;
+                }
+                //add codes to present the
+                //mClusterManager.setAlgorithm(new GridBasedAlgorithm<MyItem>().;
+
+                lastCallMs = snap;
+                currentBounds = bounds;
+            }
+        });
+
         mClusterManager.cluster();
     }
 
@@ -68,8 +105,8 @@ import io.realm.RealmResults;
             //getMap().addMarker(new MarkerOptions().position(place));
             double lat = place.latitude;
             double lng = place.longitude;
-                MyItem offsetItem = new MyItem(lat,lng,photo.getId());
-                mClusterManager.addItem(offsetItem);
+            MyItem offsetItem = new MyItem(lat,lng,photo.getId());
+            mClusterManager.addItem(offsetItem);
         }
     }
     private class PhotoRenderer extends DefaultClusterRenderer<MyItem> {
@@ -97,13 +134,14 @@ import io.realm.RealmResults;
         protected void onBeforeClusterItemRendered(MyItem photo, MarkerOptions options){
             // Show a single photo, set the info photo to show their path
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/"+photo.fileName;
+
             File imgFile = new  File(filePath);
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 mImageView.setImageBitmap(myBitmap);
             }
             Bitmap icon = mIconGenerator.makeIcon();
-            options.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            options.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(photo.fileName);
         }
         @Override
         protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
@@ -113,7 +151,6 @@ import io.realm.RealmResults;
             int height = mDimension;
 
             for (MyItem p : cluster.getItems()) {
-                // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/"+p.fileName;
                 File imgFile = new  File(filePath);
@@ -141,8 +178,7 @@ import io.realm.RealmResults;
     public boolean onClusterClick(Cluster<MyItem> cluster) {
         // Create the builder to collect all essential cluster items for the bounds.
         LatLngBounds.Builder builder = LatLngBounds.builder();
-        String firstName = cluster.getItems().iterator().next().fileName;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+
         for (ClusterItem item : cluster.getItems()) {
             builder.include(item.getPosition());
         }
