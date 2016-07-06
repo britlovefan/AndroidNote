@@ -21,5 +21,7 @@ Could display the location of photo on the map and implement a photo outlook clu
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
 Tap on the Map, shows the nearest place you've been to 
+- No need to reload the photos everytime, figure out how to discover that the photos in the folder have been changed and asked 
+the user to choose whether to update their current database or not. 
 #### The Presentation --- Last Week
 What is your Algorithms, How to demo your App, Any other Chart or data to show the Comparison?
