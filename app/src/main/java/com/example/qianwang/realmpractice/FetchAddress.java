@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +36,10 @@ public class FetchAddress extends IntentService {
     List<Address> possibleAddress = null;
     String locationId;
     String zipCode;
-
+    ArrayList<String> photoId;
+    // The arraylists to first store the data and later insert into the Realm datapbase
+    ArrayList<Address>photoAddress;
+    ArrayList<Location>photoLocation;
     public FetchAddress() {
         super("FetchAddress");
     }
@@ -54,6 +58,10 @@ public class FetchAddress extends IntentService {
 
         Intent intentUpdate = new Intent();
         intentUpdate.setAction(Constants.UPDATE);
+
+        photoId = new ArrayList<>();
+        photoAddress = new ArrayList<>();
+        photoLocation = new ArrayList<>();
 
         String sdcard = intent.getStringExtra(Constants.FILE_ID);
         File[] files = new File(sdcard).listFiles();
@@ -93,6 +101,10 @@ public class FetchAddress extends IntentService {
                         deliverResult(Constants.FAILURE_RESULT,0);
                     } else {
                         count++;
+                        photoId.add(name);
+                        photoAddress.add(possibleAddress.get(0));
+                        photoLocation.add(location);
+                        /*
                         Address address = possibleAddress.get(0);
                         //Log.i(TAG, getString(R.string.address_found));
                         //perform the add  zipcode column not by finding
@@ -106,16 +118,32 @@ public class FetchAddress extends IntentService {
                         realm.beginTransaction();
                         Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
                         realm.commitTransaction();
-
-                        intentUpdate.putExtra(Constants.INTENT_UPDATE, count);
-                        sendBroadcast(intentUpdate);
+                        */
                     }
                 }
             }
         }
-        deliverResult(Constants.SUCCESS_RESULT,count);
-        RealmResults<Photo> results = realm.where(Photo.class).findAll();
-        Log.v("show length of data",results.size()+"");
+        count = 0;
+        // Add to the Database
+        for(int i = 0;i < photoId.size(); i++){
+            count++;
+            zipCode = photoAddress.get(i).getLocality();
+            Photo photo = new Photo();
+            photo.setId(photoId.get(i));
+            photo.setTimeStamp(photoLocation.get(i).getTime());
+            photo.setLongitude(photoLocation.get(i).getLongitude());
+            photo.setLatitude(photoLocation.get(i).getLatitude());
+            photo.setZipCode(zipCode);
+            realm.beginTransaction();
+            Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
+            realm.commitTransaction();
+            intentUpdate.putExtra(Constants.INTENT_UPDATE, count);
+            sendBroadcast(intentUpdate);
+        }
+
+        deliverResult(Constants.SUCCESS_RESULT,photoId.size());
+        //RealmResults<Photo> results = realm.where(Photo.class).findAll();
+        //Log.v("show length of data",results.size()+"");
         realm.close();
     }
 
