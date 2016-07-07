@@ -55,7 +55,7 @@ import io.realm.RealmResults;
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
         mClusterManager.setRenderer(new PhotoRenderer());
-        getMap().setOnCameraChangeListener(mClusterManager);
+        //getMap().setOnCameraChangeListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);
         getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
@@ -69,45 +69,35 @@ import io.realm.RealmResults;
                 .build();
         Realm realm = Realm.getInstance(config);
         results = realm.where(Photo.class).findAll();
+
         // Set the vision to the places where photos are located
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(results.get(0).getLatitude(),results.get(0).getLongitude()),10));
         addItems();
+        mClusterManager.cluster();
+    }
+  // Add the items in a viewable region
+    private void addItems() {
         currentBounds = getMap().getProjection().getVisibleRegion().latLngBounds;
+        mClusterManager.clearItems();
         getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 LatLngBounds bounds = getMap().getProjection().getVisibleRegion().latLngBounds;
-                if (currentBounds.northeast.latitude == bounds.northeast.latitude
-                        && currentBounds.northeast.longitude == bounds.northeast.longitude
-                        && currentBounds.southwest.latitude == bounds.southwest.latitude
-                        && currentBounds.southwest.longitude == bounds.southwest.longitude) {
-                    return;
-                }
-                final long snap = System.currentTimeMillis();
-                if (lastCallMs + CAMERA_MOVE_REACT_THRESHOLD_MS > snap) {
-                    lastCallMs = snap;
-                    return;
-                }
-                //add codes to present the
-                //mClusterManager.setAlgorithm(new GridBasedAlgorithm<MyItem>().;
-
-                lastCallMs = snap;
                 currentBounds = bounds;
+                //getMap().setOnCameraChangeListener(mClusterManager);
             }
         });
-
-        mClusterManager.cluster();
-    }
-
-    private void addItems() {
         for (Photo photo : results) {
             LatLng place = new LatLng(photo.getLatitude(), photo.getLongitude());
             //getMap().addMarker(new MarkerOptions().position(place));
-            double lat = place.latitude;
-            double lng = place.longitude;
-            MyItem offsetItem = new MyItem(lat,lng,photo.getId());
-            mClusterManager.addItem(offsetItem);
+            if(currentBounds.contains(place)) {
+                double lat = place.latitude;
+                double lng = place.longitude;
+                MyItem offsetItem = new MyItem(lat, lng, photo.getId());
+                mClusterManager.addItem(offsetItem);
+            }
         }
+        getMap().setOnCameraChangeListener(mClusterManager);
     }
     private class PhotoRenderer extends DefaultClusterRenderer<MyItem> {
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
@@ -170,7 +160,7 @@ import io.realm.RealmResults;
         }
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            return true;
+            return cluster.getSize()>=1;
         }
     }
 
