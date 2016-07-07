@@ -16,6 +16,13 @@ Could display the location of photo on the map and implement a photo outlook clu
 - The unseen part should not be generated
 - Show the significant change(like a graph with arrows or on map: "You spent ____ days at ___ , you move to _____ at "
 
+Talk With Demai:
+
+1. Separate the loop of fetchAddress when loading the photo's information to the database. Keep the location data in an array or hash map and fetch the data directly from array or hash map.
+
+2. In the ShowTimeLine.java: Construct 3 test, each perform 1000 times, use a Random Generator to generate the query month/specific time range. Random Generate the Latitude/ Logitude (Point on Map) and select out the photo that are within range to the random point
+
+3. Build the App using SQLite, perform the above procedure and calculate the time.
 
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
