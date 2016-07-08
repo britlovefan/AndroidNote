@@ -14,9 +14,11 @@ import com.example.qianwang.realmpractice.model.Photo;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -72,6 +74,8 @@ public class FetchAddress extends IntentService {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 long time = location.getTime();
+                Date date = new Date(time);
+
                 if (latitude != 0 && longitude != 0 && time != 0) {
                     try {
                         possibleAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -105,7 +109,8 @@ public class FetchAddress extends IntentService {
         Intent intentUpdate = new Intent();
         intentUpdate.setAction(Constants.UPDATE);
         // Add to the Database and start the timer
-        long startTime = System.currentTimeMillis();
+
+        long timeSum = 0;
         for(int i = 0;i < photoId.size(); i++){
             zipCode = photoAddress.get(i).getLocality();
             Photo photo = new Photo();
@@ -114,15 +119,16 @@ public class FetchAddress extends IntentService {
             photo.setLongitude(photoLocation.get(i).getLongitude());
             photo.setLatitude(photoLocation.get(i).getLatitude());
             photo.setZipCode(zipCode);
+            long startTime = System.currentTimeMillis();
             realm.beginTransaction();
             Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
             realm.commitTransaction();
+            timeSum = timeSum + System.currentTimeMillis() - startTime;
             intentUpdate.putExtra(Constants.INTENT_UPDATE,i);
             sendBroadcast(intentUpdate);
         }
         realm.close();
-        long result = System.currentTimeMillis() - startTime;
-        Log.v("Time Elapse",result+"ms");
+        Log.v("Time Elapse",timeSum+"ms");
         deliverResult(Constants.SUCCESS_RESULT,photoId.size());
     }
 

@@ -20,6 +20,7 @@ import com.example.qianwang.realmpractice.model.Photo;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -29,6 +30,7 @@ import io.realm.RealmResults;
  * Created by qianwang on 6/28/16.
  */
 public class ShowTimeline extends AppCompatActivity {
+    private Realm realm;
     private SeekBar seekBar;
     private TextView daysDisplay;
     private TextView LocationDisplay;
@@ -46,6 +48,10 @@ public class ShowTimeline extends AppCompatActivity {
                 .build();
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
+        //Insert the Test
+        long timeElapseMonth = TestSelectQuery();
+        Log.v("Select Month",timeElapseMonth+"");
+
         results = realm.where(Photo.class).findAll();
         Log.v("timeline total",results.size()+"");
         results = results.sort("timeStamp");
@@ -104,50 +110,31 @@ public class ShowTimeline extends AppCompatActivity {
     protected void setText(String dateTime,String dataString) {
         daysDisplay.setText(dateTime);
         LocationDisplay.setText(dataString);
-        /*int months = progress / daysInMonth + 1;
-        String monthString;
-        switch (months) {
-            case 1:
-                monthString = "January";
-                break;
-            case 2:
-                monthString = "February";
-                break;
-            case 3:
-                monthString = "March";
-                break;
-            case 4:
-                monthString = "April";
-                break;
-            case 5:
-                monthString = "May";
-                break;
-            case 6:
-                monthString = "June";
-                break;
-            case 7:
-                monthString = "July";
-                break;
-            case 8:
-                monthString = "August";
-                break;
-            case 9:
-                monthString = "September";
-                break;
-            case 10:
-                monthString = "October";
-                break;
-            case 11:
-                monthString = "November";
-                break;
-            case 12:
-                monthString = "December";
-                break;
-            default:
-                monthString = "Invalid month";
-                break;
+    }
+    protected long TestSelectQuery(){
+        long startTime = System.currentTimeMillis();
+        for(int i = 0;i < 1000;i++){
+            long[] monthRange = RandomGenerateMonth();
+            RealmResults<Photo> resultsByMonth =realm.where(Photo.class).between("timeStamp",monthRange[0],monthRange[1]).findAll();
         }
-        daysDisplay.setText(monthString);*/
+        return System.currentTimeMillis() - startTime;
+    }
+    //function that returns the range of time in millis in random month/year
+    protected long[] RandomGenerateMonth(){
+        SimpleDateFormat dfDateTime  = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        int year = randBetween(2015, 2016);
+        int month = randBetween(0, 11);
+        int hour = randBetween(7, 22);
+        int min = randBetween(0, 59);
+        int sec = randBetween(0, 59);
+        GregorianCalendar gc1 = new GregorianCalendar(year, month, 1);
+        GregorianCalendar gc2 = new GregorianCalendar(year, month, gc1.getActualMaximum(gc1.DAY_OF_MONTH));
+        gc1.set(year, month, 1, hour, min,sec);
+        gc2.set(year, month, gc1.getActualMaximum(gc1.DAY_OF_MONTH), hour, min,sec);
+        return new long[]{gc1.getTimeInMillis(),gc2.getTimeInMillis()};
+    }
+    protected int randBetween(int start, int end){
+        return start + (int)Math.round(Math.random() * (end - start));
     }
 
 
