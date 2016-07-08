@@ -56,17 +56,12 @@ public class FetchAddress extends IntentService {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         locationId = intent.getStringExtra(Constants.LOCATION_ID);
 
-        Intent intentUpdate = new Intent();
-        intentUpdate.setAction(Constants.UPDATE);
-
         photoId = new ArrayList<>();
         photoAddress = new ArrayList<>();
         photoLocation = new ArrayList<>();
 
         String sdcard = intent.getStringExtra(Constants.FILE_ID);
         File[] files = new File(sdcard).listFiles();
-        //Log.v("data size", files.length + "");
-        int count = 0;
         for (File file : files) {
             if (!file.isFile()) continue;
             String[] bits = file.getName().split("\\.");
@@ -100,33 +95,18 @@ public class FetchAddress extends IntentService {
                         }
                         deliverResult(Constants.FAILURE_RESULT,0);
                     } else {
-                        count++;
                         photoId.add(name);
                         photoAddress.add(possibleAddress.get(0));
                         photoLocation.add(location);
-                        /*
-                        Address address = possibleAddress.get(0);
-                        //Log.i(TAG, getString(R.string.address_found));
-                        //perform the add  zipcode column not by finding
-                        zipCode = address.getLocality();
-                        Photo photo = new Photo();
-                        photo.setId(name);
-                        photo.setTimeStamp(time);
-                        photo.setLongitude(longitude);
-                        photo.setLatitude(latitude);
-                        photo.setZipCode(zipCode);
-                        realm.beginTransaction();
-                        Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
-                        realm.commitTransaction();
-                        */
                     }
                 }
             }
         }
-        count = 0;
-        // Add to the Database
+        Intent intentUpdate = new Intent();
+        intentUpdate.setAction(Constants.UPDATE);
+        // Add to the Database and start the timer
+        long startTime = System.currentTimeMillis();
         for(int i = 0;i < photoId.size(); i++){
-            count++;
             zipCode = photoAddress.get(i).getLocality();
             Photo photo = new Photo();
             photo.setId(photoId.get(i));
@@ -137,14 +117,13 @@ public class FetchAddress extends IntentService {
             realm.beginTransaction();
             Photo photoUser1 = realm.copyToRealmOrUpdate(photo);
             realm.commitTransaction();
-            intentUpdate.putExtra(Constants.INTENT_UPDATE, count);
+            intentUpdate.putExtra(Constants.INTENT_UPDATE,i);
             sendBroadcast(intentUpdate);
         }
-
-        deliverResult(Constants.SUCCESS_RESULT,photoId.size());
-        //RealmResults<Photo> results = realm.where(Photo.class).findAll();
-        //Log.v("show length of data",results.size()+"");
         realm.close();
+        long result = System.currentTimeMillis() - startTime;
+        Log.v("Time Elapse",result+"ms");
+        deliverResult(Constants.SUCCESS_RESULT,photoId.size());
     }
 
     //deliver the result code revealing whether the address have been successfully retrieved

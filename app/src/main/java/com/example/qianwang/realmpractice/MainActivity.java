@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
         final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-        // 6/27 Trying to sort the result by time
-                /*result = result.sort("timeStamp");
-                Log.v("The first Element",result.get(0).getId()+"");*/
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -80,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 loadPictures();
             }
         });
-        //go to the cluster mode
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
     protected void initializeView(){
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -97,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     // the directory of the photos should be modified to be the folder of photos in android phone
     // if not using emulator
     private void loadPictures() {
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         status.setText("We Are Busy Loading Your Photos...");
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
@@ -139,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
@@ -172,18 +168,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             String result = resultData.getString(Constants.PROCESSED_ID);
-
             int count = resultData.getInt(Constants.TOTAL_NUM);
             progressBar.setMax(count);
 
-            // Want to make a toast message to the user
             Context context = getApplicationContext();
             CharSequence text = result;
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-            //start another activity page
-            //startActivity(new Intent(getApplicationContext(), ShowTimeline.class));
             //unseen the progressbar and the text
             progressBar.setVisibility(View.INVISIBLE);
             status.setText("");
