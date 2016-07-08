@@ -23,7 +23,7 @@
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:id="@+id/progressBar"
-        android:layout_marginBottom="116dp"
+        android:layout_marginBottom="33dp"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:indeterminate="false"
         android:layout_alignParentBottom="true"
@@ -35,7 +35,7 @@
         android:id="@+id/loadStatus"
         android:textSize="17dp"
         android:layout_above="@+id/progressBar"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"  />
 
     <Button
         android:layout_width="wrap_content"
@@ -45,5 +45,14 @@
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/textView"
         android:layout_alignStart="@+id/textView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHOW DATA"
+        android:id="@+id/showData"
+        android:layout_below="@+id/loadButton"
+        android:layout_alignRight="@+id/loadButton"
+        android:layout_alignEnd="@+id/loadButton" />
 
 </RelativeLayout>

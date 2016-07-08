@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
     public Button loadButton;
+    public Button showButton;
     private TextView status;
     Bundle bundle;
 
@@ -63,13 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
-        final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                results1.deleteAllFromRealm();
-            }
-        });
+        // register receiver
+        myBroadcastReceiver_Update = new MyBroadcastReceiver_Update();
+        IntentFilter intentFilter_update = new IntentFilter(Constants.UPDATE);
+        intentFilter_update.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(myBroadcastReceiver_Update, intentFilter_update);
+
         loadButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -77,7 +77,31 @@ public class MainActivity extends AppCompatActivity {
                 loadPictures();
             }
         });
-
+        showButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                realm = Realm.getDefaultInstance();
+                if(realm.isEmpty()){
+                    Context context = getApplicationContext();
+                    CharSequence text = "Load your photo first:)";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+                else {
+                    startActivity(new Intent(getApplicationContext(), OptionChooser.class));
+                }
+            }
+        });
+        //clean the data to migration? maybe do not need to
+        /*final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results1.deleteAllFromRealm();
+            }
+        });*/
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -87,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         loadButton = (Button)findViewById(R.id.loadButton);
-        //mapCluster = (Button)findViewById(R.id.clusterButton);
+        showButton = (Button)findViewById(R.id.showData);
         status = (TextView)findViewById(R.id.loadStatus);
     }
     // get the exif data from the pictures in a folder
@@ -99,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
         //register receiver
-        myBroadcastReceiver_Update = new MyBroadcastReceiver_Update();
+        /*myBroadcastReceiver_Update = new MyBroadcastReceiver_Update();
         IntentFilter intentFilter_update = new IntentFilter(Constants.UPDATE);
         intentFilter_update.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(myBroadcastReceiver_Update, intentFilter_update);
+        registerReceiver(myBroadcastReceiver_Update, intentFilter_update);*/
     }
 
     // start intent service for each GPS data pair

@@ -151,7 +151,6 @@ import io.realm.RealmResults;
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
-            Log.v("number of clusters",cluster.getSize()+"");
             mTextView.setText(String.valueOf(cluster.getSize()));
             mClusterImageView.setImageDrawable(multiDrawable);
 

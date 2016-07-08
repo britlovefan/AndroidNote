@@ -30,7 +30,6 @@ import io.realm.RealmResults;
  * Created by qianwang on 6/28/16.
  */
 public class ShowTimeline extends AppCompatActivity {
-    private Realm realm;
     private SeekBar seekBar;
     private TextView daysDisplay;
     private TextView LocationDisplay;
@@ -50,7 +49,7 @@ public class ShowTimeline extends AppCompatActivity {
         Realm realm = Realm.getDefaultInstance();
         //Insert the Test
         long timeElapseMonth = TestSelectQuery();
-        Log.v("Select Month",timeElapseMonth+"");
+        Log.v("Select Month Test",timeElapseMonth+"");
 
         results = realm.where(Photo.class).findAll();
         Log.v("timeline total",results.size()+"");
@@ -81,8 +80,6 @@ public class ShowTimeline extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int length = results.size();
-                Log.v("length",length+"");
-                //int index = progress/seekBar.getMax()*length;
                 int index = (progress*(length-1))/seekBar.getMax();
                 String name = results.get(index).getId();
                 long dateTime = results.get(index).getTimeStamp();
@@ -112,6 +109,7 @@ public class ShowTimeline extends AppCompatActivity {
         LocationDisplay.setText(dataString);
     }
     protected long TestSelectQuery(){
+        Realm realm = Realm.getDefaultInstance();
         long startTime = System.currentTimeMillis();
         for(int i = 0;i < 1000;i++){
             long[] monthRange = RandomGenerateMonth();
@@ -136,6 +134,5 @@ public class ShowTimeline extends AppCompatActivity {
     protected int randBetween(int start, int end){
         return start + (int)Math.round(Math.random() * (end - start));
     }
-
 
 }
