@@ -48,8 +48,9 @@ public class ShowTimeline extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
         //Insert the Test
-        long timeElapseMonth = TestSelectQuery();
-        Log.v("Select Month Test",timeElapseMonth+"");
+        long[] timeElapseMonth = TestSelectQuery();
+        Log.v("Select Month Test",timeElapseMonth[0]+"");
+        Log.v("Select Range Test",timeElapseMonth[1]+"");
 
         results = realm.where(Photo.class).findAll();
         Log.v("timeline total",results.size()+"");
@@ -108,14 +109,22 @@ public class ShowTimeline extends AppCompatActivity {
         daysDisplay.setText(dateTime);
         LocationDisplay.setText(dataString);
     }
-    protected long TestSelectQuery(){
+    protected long[] TestSelectQuery(){
         Realm realm = Realm.getDefaultInstance();
         long startTime = System.currentTimeMillis();
         for(int i = 0;i < 1000;i++){
             long[] monthRange = RandomGenerateMonth();
-            RealmResults<Photo> resultsByMonth =realm.where(Photo.class).between("timeStamp",monthRange[0],monthRange[1]).findAll();
+            RealmResults<Photo> resultsByMonth = realm.where(Photo.class).between("timeStamp",monthRange[0],monthRange[1]).findAll();
         }
-        return System.currentTimeMillis() - startTime;
+        long timeElapse1 = System.currentTimeMillis() - startTime;
+        //Test the speed of select query of certain range.
+        long startTime2 = System.currentTimeMillis();
+        for(int i = 0;i < 1000;i++){
+            long[] dateRange = RandomeGenerateRange();
+            RealmResults<Photo> resultsByRange = realm.where(Photo.class).between("timeStamp",dateRange[0],dateRange[1]).findAll();
+        }
+        long timeElapse2 = System.currentTimeMillis() - startTime2;
+        return new long[]{timeElapse1,timeElapse2};
     }
     //function that returns the range of time in millis in random month/year
     protected long[] RandomGenerateMonth(){
@@ -134,5 +143,20 @@ public class ShowTimeline extends AppCompatActivity {
     protected int randBetween(int start, int end){
         return start + (int)Math.round(Math.random() * (end - start));
     }
-
+    //function that returns
+    protected long[] RandomeGenerateRange(){
+        SimpleDateFormat dfDateTime  = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        int year = randBetween(2015, 2016);
+        int month = randBetween(0, 11);
+        int month2 = randBetween(month,11);
+        int hour = randBetween(7, 22);
+        int hour2 = randBetween(hour,22);
+        int min = randBetween(0, 59);
+        int sec = randBetween(0, 59);
+        GregorianCalendar gc1 = new GregorianCalendar(year, month, 1);
+        GregorianCalendar gc2 = new GregorianCalendar(year, month, 1);
+        gc1.set(year, month, randBetween(0,gc1.getActualMaximum(gc1.DAY_OF_MONTH)), hour, min,sec);
+        gc2.set(year, month2, gc2.getActualMaximum(gc2.DAY_OF_MONTH), hour2, min,sec);
+        return new long[]{gc1.getTimeInMillis(),gc2.getTimeInMillis()};
+    }
 }
