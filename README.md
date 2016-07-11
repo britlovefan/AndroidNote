@@ -24,9 +24,11 @@ Talk With Demai:
 3. Build the App using SQLite, perform the above procedure and calculate the time.
 
 #### MileStone 5 --- Week 5 
+
 Main Task:
 - Test the query of selecting the nearest photo to a random place 
 - Build the App using SQLite and perform the same tests again
+
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
