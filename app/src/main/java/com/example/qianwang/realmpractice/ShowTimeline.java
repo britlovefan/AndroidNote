@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.qianwang.realmpractice.model.GeoLocation;
 import com.example.qianwang.realmpractice.model.Photo;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -55,6 +57,8 @@ public class ShowTimeline extends AppCompatActivity {
         long[] timeElapseMonth = TestSelectQuery();
         Log.v("Select Month Test", timeElapseMonth[0] + "");
         Log.v("Select Range Test", timeElapseMonth[1] + "");
+
+        TestLocationQuery();
 
         results = realm.where(Photo.class).findAll();
         Log.v("timeline total", results.size() + "");
@@ -194,8 +198,39 @@ public class ShowTimeline extends AppCompatActivity {
     }
     // Test the query speed of finding the closest location of photo to a random location
     protected void TestLocationQuery(){
+        Realm realm = Realm.getDefaultInstance();
         ArrayList<LatLng> randomLocations = randomGenerate();
-        
+        double earthRadius = 6371.01;
+        HashMap<Double,Photo> map = new HashMap<>();
+        long startTime = System.currentTimeMillis();
+        for(int i = 0;i < randomLocations.size();i++){
+            LatLng origin = randomLocations.get(i);
+            GeoLocation myLocation = GeoLocation.fromDegrees(origin.latitude,origin.longitude);
+            //set the distance bound,maybe need to readjusts if no places are found in the area
+            double distanceBound = 600;
+            GeoLocation[] bounds = myLocation.boundingCoordinates(distanceBound, earthRadius);
+            double latmin = bounds[0].getLatitudeInRadians();
+            double lgnmin = bounds[0].getLongitudeInRadians();
+            double latmax = bounds[1].getLatitudeInRadians();
+            double lgnmax = bounds[1].getLongitudeInRadians();
+            //How to perform the query using the bounding information
+            RealmResults<Photo> results = realm.where(Photo.class).between("Latitude",latmin,latmax).findAll();
+            RealmResults<Photo> results1 = results.where().between("Longitude",lgnmin,lgnmax).findAll();
+            double minvalue = Integer.MAX_VALUE;
+            for(int j = 0;j < results1.size();j++){
+                GeoLocation location = GeoLocation.fromDegrees(results1.get(j).getLatitude(),results1.get(j).getLongitude());
+                double distance = myLocation.distanceTo(location,earthRadius);
+                map.put(distance,results1.get(j));
+                if(distance<minvalue){
+                    minvalue = distance;
+                }
+            }
+            // But what if there are multiple values that are having the same nearest distance?
+            // Are we just returning one?
+            Photo nearestPhoto = map.get(minvalue);
+        }
+        long lastTime = System.currentTimeMillis()-startTime;
+        Log.v("nearest location",lastTime+"");
     }
     //random generate points near the locations of every point online
     protected ArrayList<LatLng> randomGenerate() {
@@ -219,5 +254,6 @@ public class ShowTimeline extends AppCompatActivity {
         }
         return randomLocations;
     }
+
 }
 
