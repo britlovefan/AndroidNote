@@ -53,6 +53,19 @@
         android:id="@+id/showData"
         android:layout_below="@+id/loadButton"
         android:layout_alignRight="@+id/loadButton"
-        android:layout_alignEnd="@+id/loadButton" />
+        android:layout_alignEnd="@+id/loadButton"
+        android:layout_alignLeft="@+id/loadButton"
+        android:layout_alignStart="@+id/loadButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST "
+        android:id="@+id/testQuery"
+        android:layout_below="@+id/showData"
+        android:layout_alignRight="@+id/showData"
+        android:layout_alignEnd="@+id/showData"
+        android:layout_alignLeft="@+id/showData"
+        android:layout_alignStart="@+id/showData" />
 
 </RelativeLayout>

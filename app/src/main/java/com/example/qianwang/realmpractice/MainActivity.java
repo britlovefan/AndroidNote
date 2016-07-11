@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private MyBroadcastReceiver_Update myBroadcastReceiver_Update;
     public Button loadButton;
     public Button showButton;
+    public Button testButton;
     private TextView status;
     Bundle bundle;
 
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 loadPictures();
             }
         });
+
         showButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -92,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     startActivity(new Intent(getApplicationContext(), OptionChooser.class));
                 }
+            }
+        });
+
+        testButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),TestQuerySpeed.class);
+                startService(intent);
             }
         });
         //clean the data to migration? maybe do not need to
@@ -112,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
         loadButton = (Button)findViewById(R.id.loadButton);
         showButton = (Button)findViewById(R.id.showData);
+        testButton = (Button)findViewById(R.id.testQuery);
         status = (TextView)findViewById(R.id.loadStatus);
     }
     // get the exif data from the pictures in a folder

@@ -53,7 +53,6 @@ public class FetchAddress extends IntentService {
                 .build();
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
-
         mLocationReceiver = intent.getParcelableExtra(Constants.RECEIVER);
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         locationId = intent.getStringExtra(Constants.LOCATION_ID);

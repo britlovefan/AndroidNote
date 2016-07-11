@@ -17,6 +17,8 @@
 
         <service android:name = ".FetchAddress"
         android:exported = "false"/>
+        <service android:name = ".TestQuerySpeed"
+            android:exported="false"/>
         <activity android:name=".ShowTimeline" />
         <activity android:name=".map.MapCluster"/>
         <activity android:name=".OptionChooser"/>
