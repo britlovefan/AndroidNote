@@ -11,10 +11,9 @@ Retrieve the Location Data from the GPS info in the background, included Zipcode
 Implemented a SeekBar TimeLine that could allow the user to search the photo by touching across the bar, but doesn't 
 Could display the location of photo on the map and implement a photo outlook cluster with the number of items on the icon
 
-#### MileStone 4 --- Week 4 (Going on:) )
-
-- The unseen part should not be generated
-- Show the significant change(like a graph with arrows or on map: "You spent ____ days at ___ , you move to _____ at "
+#### MileStone 4 --- Week 4 
+- The unseen part should not be generated(still try to implement)
+- Build a test that record the time spent on select specific month/time range
 
 Talk With Demai:
 
@@ -24,6 +23,10 @@ Talk With Demai:
 
 3. Build the App using SQLite, perform the above procedure and calculate the time.
 
+#### MileStone 5 --- Week 5 
+Main Task:
+- Test the query of selecting the nearest photo to a random place 
+- Build the App using SQLite and perform the same tests again
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
