@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //clean the data to migration? maybe do not need to
-        /*final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-        realm.executeTransaction(new Realm.Transaction() {
+        final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
+        /*realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 results1.deleteAllFromRealm();

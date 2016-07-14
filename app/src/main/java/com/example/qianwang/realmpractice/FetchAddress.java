@@ -63,6 +63,7 @@ public class FetchAddress extends IntentService {
 
         String sdcard = intent.getStringExtra(Constants.FILE_ID);
         File[] files = new File(sdcard).listFiles();
+        int num = 0;
         for (File file : files) {
             if (!file.isFile()) continue;
             String[] bits = file.getName().split("\\.");
@@ -74,6 +75,7 @@ public class FetchAddress extends IntentService {
                 double longitude = location.getLongitude();
                 long time = location.getTime();
                 Date date = new Date(time);
+                num++;
 
                 if (latitude != 0 && longitude != 0 && time != 0) {
                     try {
@@ -105,6 +107,7 @@ public class FetchAddress extends IntentService {
                 }
             }
         }
+        Log.v("number",num+"");
         Intent intentUpdate = new Intent();
         intentUpdate.setAction(Constants.UPDATE);
         // Add to the Database and start the timer

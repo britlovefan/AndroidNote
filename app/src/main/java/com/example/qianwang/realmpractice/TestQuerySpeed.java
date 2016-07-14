@@ -34,7 +34,6 @@ public class TestQuerySpeed extends IntentService{
             long[] timeElapseMonth = TestSelectQuery();
             Log.v("Select Month Test", timeElapseMonth[0] + "");
             Log.v("Select Range Test", timeElapseMonth[1] + "");
-            Log.v("success", "yes");
             TestLocationQuery();
         }
     }
@@ -94,24 +93,6 @@ public class TestQuerySpeed extends IntentService{
 
     // function that test the query of select photo within distance to
     // center[0]-lat,center[1]-long
-    protected double[] RandomPoint(float[] center, int radius) {
-        Random random = new Random();
-        // Convert radius from meters to degrees
-        double radiusInDegrees = radius / 111000f;
-
-        double u = random.nextFloat();
-        double v = random.nextDouble();
-        double w = radiusInDegrees * Math.sqrt(u);
-        double t = 2 * Math.PI * v;
-        double x = w * Math.cos(t);
-        double y = w * Math.sin(t);
-
-        // Adjust the x-coordinate for the shrinking of the east-west distances
-        double new_x = x / Math.cos(center[1]);
-        double foundLatitude = new_x + center[0];
-        double foundLongitude = y + center[1];
-        return new double[]{foundLatitude, foundLongitude};
-    }
     // Test the query speed of finding the closest location of photo to a random location
     protected void TestLocationQuery(){
         Realm realm = Realm.getDefaultInstance();

@@ -16,6 +16,7 @@ import com.example.qianwang.realmpractice.R;
 import com.example.qianwang.realmpractice.model.Photo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -70,14 +71,17 @@ import io.realm.RealmResults;
         Realm realm = Realm.getInstance(config);
         results = realm.where(Photo.class).findAll();
 
+        UiSettings uiSettings = getMap().getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
         // Set the vision to the places where photos are located
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(results.get(0).getLatitude(),results.get(0).getLongitude()),10));
+        //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.2102699279785,16.3654479980469),2));
+        //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(results.get(0).getLatitude(),results.get(0).getLongitude()),2));
         addItems();
         mClusterManager.cluster();
     }
   // Add the items in a viewable region
     private void addItems() {
-        currentBounds = getMap().getProjection().getVisibleRegion().latLngBounds;
+        /*currentBounds = getMap().getProjection().getVisibleRegion().latLngBounds;
         mClusterManager.clearItems();
         getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -86,16 +90,16 @@ import io.realm.RealmResults;
                 currentBounds = bounds;
                 //getMap().setOnCameraChangeListener(mClusterManager);
             }
-        });
+        });*/
         for (Photo photo : results) {
             LatLng place = new LatLng(photo.getLatitude(), photo.getLongitude());
             //getMap().addMarker(new MarkerOptions().position(place));
-            if(currentBounds.contains(place)) {
+           // if(currentBounds.contains(place)) {
                 double lat = place.latitude;
                 double lng = place.longitude;
                 MyItem offsetItem = new MyItem(lat, lng, photo.getId());
                 mClusterManager.addItem(offsetItem);
-            }
+            //}
         }
         getMap().setOnCameraChangeListener(mClusterManager);
     }
