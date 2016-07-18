@@ -31,9 +31,13 @@ Talk With Demai:
 #### Mile Stone --- Week 6
 
 Talk With Demai:
+
 1. Current Photo is 300+, need to grow to 1000+
+
 2. The Select Test of the month and time range, one of them should be implemented by using the Realm, equal""
+
 3. Find the usage of the Memory between Realm and Sqlite when executing the app
+
 4. The DiskSpace/ find the db file and the compare
 
 #####The IMPROVEMENT: 
