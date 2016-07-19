@@ -33,9 +33,12 @@ public class TestQuerySpeed extends IntentService{
         if(intent.getExtras()==null) {
             long[] timeElapseMonth = TestSelectQuery();
             Log.v("Select Month Test", timeElapseMonth[0] + "");
-            Log.v("Select Range Test", timeElapseMonth[1] + "");
+            Log.v("Select Time Range Test", timeElapseMonth[1] + "");
             TestLocationQuery();
+            realm.close();
         }
+        realm.close();
+        // need to close the Realm?
     }
     protected long[] TestSelectQuery() {
         Realm realm = Realm.getDefaultInstance();
@@ -44,6 +47,7 @@ public class TestQuerySpeed extends IntentService{
             long[] monthRange = RandomGenerateMonth();
             RealmResults<Photo> resultsByMonth = realm.where(Photo.class).between("timeStamp", monthRange[0], monthRange[1]).findAll();
         }
+        //equal...
         long timeElapse1 = System.currentTimeMillis() - startTime;
         //Test the speed of select query of certain range.
         long startTime2 = System.currentTimeMillis();
@@ -96,6 +100,7 @@ public class TestQuerySpeed extends IntentService{
     // Test the query speed of finding the closest location of photo to a random location
     protected void TestLocationQuery(){
         Realm realm = Realm.getDefaultInstance();
+        // generate a list of random locations
         ArrayList<LatLng> randomLocations = randomGenerate();
         double earthRadius = 6371.01;
         HashMap<Double,Photo> map = new HashMap<>();
@@ -123,7 +128,7 @@ public class TestQuerySpeed extends IntentService{
                 }
             }
             // But what if there are multiple values that are having the same nearest distance?
-            // Are we just returning one?
+
             Photo nearestPhoto = map.get(minvalue);
         }
         long lastTime = System.currentTimeMillis()-startTime;

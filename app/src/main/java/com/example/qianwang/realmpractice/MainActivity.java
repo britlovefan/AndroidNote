@@ -101,18 +101,28 @@ public class MainActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),TestQuerySpeed.class);
-                startService(intent);
+                realm = Realm.getDefaultInstance();
+                if(realm.isEmpty()){
+                    Context context = getApplicationContext();
+                    CharSequence text = "Load your photo first:)";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+                else {
+                    Intent intent = new Intent(getApplicationContext(), TestQuerySpeed.class);
+                    startService(intent);
+                }
             }
         });
         //clean the data to migration? maybe do not need to
         final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
-        /*realm.executeTransaction(new Realm.Transaction() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 results1.deleteAllFromRealm();
             }
-        });*/
+        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

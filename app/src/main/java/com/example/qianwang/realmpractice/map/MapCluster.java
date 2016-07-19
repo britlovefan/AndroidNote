@@ -78,6 +78,7 @@ import io.realm.RealmResults;
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(results.get(0).getLatitude(),results.get(0).getLongitude()),2));
         addItems();
         mClusterManager.cluster();
+        realm.close();
     }
   // Add the items in a viewable region
     private void addItems() {
@@ -188,6 +189,7 @@ import io.realm.RealmResults;
 
     @Override
     public void onClusterInfoWindowClick(Cluster<MyItem> cluster) {
+
         // Does nothing, but you could go to a list of the users.
     }
 

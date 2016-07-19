@@ -42,6 +42,7 @@ public class ShowTimeline extends AppCompatActivity {
     private TextView LocationDisplay;
     private Button backToMenu;
     private RealmResults<Photo> results;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,11 @@ public class ShowTimeline extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
     protected void InitializeView() {
         seekBar = (SeekBar) findViewById(R.id.seekBar1);
         daysDisplay = (TextView) findViewById(R.id.days);
