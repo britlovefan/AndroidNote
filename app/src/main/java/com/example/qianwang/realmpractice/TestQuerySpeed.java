@@ -34,11 +34,23 @@ public class TestQuerySpeed extends IntentService{
             long[] timeElapseMonth = TestSelectQuery();
             Log.v("Select Month Test", timeElapseMonth[0] + "");
             Log.v("Select Time Range Test", timeElapseMonth[1] + "");
+            long testEqual = TestEqualQuery();
+            Log.v("Equal place Test",testEqual+"");
             TestLocationQuery();
             realm.close();
         }
         realm.close();
         // need to close the Realm?
+    }
+    protected long TestEqualQuery(){
+        Realm realm = Realm.getDefaultInstance();
+        long startTime = System.currentTimeMillis();
+        for(int i = 0;i < 1000; i++){
+            RealmResults<Photo> resultsByPlace = realm.where(Photo.class).equalTo("zipCode","Evanston").findAll();
+        }
+        long timeElapse = System.currentTimeMillis() - startTime;
+        realm.close();
+        return timeElapse;
     }
     protected long[] TestSelectQuery() {
         Realm realm = Realm.getDefaultInstance();
@@ -56,6 +68,7 @@ public class TestQuerySpeed extends IntentService{
             RealmResults<Photo> resultsByRange = realm.where(Photo.class).between("timeStamp", dateRange[0], dateRange[1]).findAll();
         }
         long timeElapse2 = System.currentTimeMillis() - startTime2;
+        realm.close();
         return new long[]{timeElapse1, timeElapse2};
     }
 
@@ -128,11 +141,11 @@ public class TestQuerySpeed extends IntentService{
                 }
             }
             // But what if there are multiple values that are having the same nearest distance?
-
             Photo nearestPhoto = map.get(minvalue);
         }
         long lastTime = System.currentTimeMillis()-startTime;
         Log.v("nearest location",lastTime+"");
+        realm.close();
     }
     //random generate points near the locations of every point online
     protected ArrayList<LatLng> randomGenerate() {

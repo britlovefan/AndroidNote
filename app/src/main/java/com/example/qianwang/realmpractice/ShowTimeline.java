@@ -101,11 +101,11 @@ public class ShowTimeline extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
             }
         });
+        realm.close();
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
     protected void InitializeView() {
         seekBar = (SeekBar) findViewById(R.id.seekBar1);
