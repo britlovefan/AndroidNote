@@ -43,6 +43,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:id="@+id/results"
+        android:inputType="textMultiLine"
         android:scrollbars="vertical"
         android:layout_marginBottom="16dp"/>
     <Button

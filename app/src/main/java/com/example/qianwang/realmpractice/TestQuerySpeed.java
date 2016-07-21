@@ -39,6 +39,7 @@ public class TestQuerySpeed extends IntentService{
             Log.v("Select Time Range Test", timeElapseMonth[1] + "");
             long testEqual = TestEqualQuery();
             Log.v("Equal place Test",testEqual+"");
+        //Equal Range Location
             long[] result = {testEqual,timeElapseMonth[1],TestLocationQuery()};
             deliverResult(0,result);
             realm.close();

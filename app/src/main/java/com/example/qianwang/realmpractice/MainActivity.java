@@ -243,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             long[] result = resultData.getLongArray(Constants.ELAPSE_TIME);
             testResult.setText("Test Equal Realm "+result[0]+"ms");
+            testResult.append("\n"+"Test Time Range "+result[1]+"ms");
+            testResult.append("\n"+"Test Nearest Location "+result[2]+"ms");
             //testResult.setText("${testResult.getText()}\n${Test Month Range}: ${result[1]} ms");
             //testResult.setText("${testResult.getText()}\n${Test Nearest Location}: ${result[2]} ms");
         }
