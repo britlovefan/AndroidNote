@@ -28,7 +28,7 @@ Talk With Demai:
 - Test the query of selecting the nearest photo to a random place 
 - Build the App using SQLite and perform the same tests again
 
-#### Mile Stone --- Week 6
+#### Mile Stone 6 --- Week 6
 
 Talk With Demai:
 
