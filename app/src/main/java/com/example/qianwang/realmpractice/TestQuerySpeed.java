@@ -2,6 +2,8 @@ package com.example.qianwang.realmpractice;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.example.qianwang.realmpractice.model.GeoLocation;
@@ -23,24 +25,30 @@ import io.realm.RealmResults;
  */
 public class TestQuerySpeed extends IntentService{
     private RealmResults<Photo> results;
+    public ResultReceiver sender;
     public TestQuerySpeed() {
         super("TestQuerySpeed");
     }
     @Override
     protected void onHandleIntent(Intent intent) {
+        sender = intent.getParcelableExtra(Constants.TEST_RECEIVER);
         Realm realm = Realm.getDefaultInstance();
         results = realm.where(Photo.class).findAll();
-        if(intent.getExtras()==null) {
             long[] timeElapseMonth = TestSelectQuery();
             Log.v("Select Month Test", timeElapseMonth[0] + "");
             Log.v("Select Time Range Test", timeElapseMonth[1] + "");
             long testEqual = TestEqualQuery();
             Log.v("Equal place Test",testEqual+"");
-            TestLocationQuery();
+            long[] result = {testEqual,timeElapseMonth[1],TestLocationQuery()};
+            deliverResult(0,result);
             realm.close();
-        }
-        realm.close();
         // need to close the Realm?
+    }
+    //Pass the result back to the UI for display
+    private void deliverResult(int resultcode,long[] timeElapse) {
+        Bundle bundle = new Bundle();
+        bundle.putLongArray(Constants.ELAPSE_TIME,timeElapse);
+        sender.send(resultcode,bundle);
     }
     protected long TestEqualQuery(){
         Realm realm = Realm.getDefaultInstance();
@@ -111,7 +119,7 @@ public class TestQuerySpeed extends IntentService{
     // function that test the query of select photo within distance to
     // center[0]-lat,center[1]-long
     // Test the query speed of finding the closest location of photo to a random location
-    protected void TestLocationQuery(){
+    protected long TestLocationQuery(){
         Realm realm = Realm.getDefaultInstance();
         // generate a list of random locations
         ArrayList<LatLng> randomLocations = randomGenerate();
@@ -146,6 +154,7 @@ public class TestQuerySpeed extends IntentService{
         long lastTime = System.currentTimeMillis()-startTime;
         Log.v("nearest location",lastTime+"");
         realm.close();
+        return lastTime;
     }
     //random generate points near the locations of every point online
     protected ArrayList<LatLng> randomGenerate() {

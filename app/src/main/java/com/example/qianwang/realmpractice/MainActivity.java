@@ -33,6 +33,7 @@ import com.example.qianwang.realmpractice.model.Photo;
 
 public class MainActivity extends AppCompatActivity {
     public AddressResultReceiver mResultReceiver;
+    public TestResultReceiver sender;
     public RealmResults<Photo> result;
     private String locationId;
     public Realm realm;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public Button showButton;
     public Button testButton;
     private TextView status;
+    private TextView testResult;
     Bundle bundle;
 
     /**
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     Intent intent = new Intent(getApplicationContext(), TestQuerySpeed.class);
+                    sender = new TestResultReceiver(new Handler());
+                    intent.putExtra(Constants.TEST_RECEIVER, sender);
                     startService(intent);
                 }
             }
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         showButton = (Button)findViewById(R.id.showData);
         testButton = (Button)findViewById(R.id.testQuery);
         status = (TextView)findViewById(R.id.loadStatus);
+        testResult = (TextView)findViewById(R.id.results);
     }
     // get the exif data from the pictures in a folder
     // the directory of the photos should be modified to be the folder of photos in android phone
@@ -226,6 +231,20 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.INVISIBLE);
             status.setText("");
             startActivity(new Intent(getApplicationContext(), OptionChooser.class));
+        }
+    }
+    // The receiver for the test query speed result
+    @SuppressLint("ParcelCreator")
+    class TestResultReceiver extends ResultReceiver {
+        public TestResultReceiver(Handler handler) {
+            super(handler);
+        }
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            long[] result = resultData.getLongArray(Constants.ELAPSE_TIME);
+            testResult.setText("Test Equal Realm "+result[0]+"ms");
+            //testResult.setText("${testResult.getText()}\n${Test Month Range}: ${result[1]} ms");
+            //testResult.setText("${testResult.getText()}\n${Test Nearest Location}: ${result[2]} ms");
         }
     }
     //Trying to implement the progress bar

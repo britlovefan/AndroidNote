@@ -15,8 +15,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="GIS Traking "
         android:id="@+id/textView"
-        android:layout_marginTop="143dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="26dp"
+        android:layout_above="@+id/loadButton"
         android:layout_centerHorizontal="true" />
 
     <ProgressBar
@@ -37,12 +37,20 @@
         android:layout_above="@+id/progressBar"
         android:layout_centerHorizontal="true"  />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/results"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="16dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Load Photo"
         android:id="@+id/loadButton"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/testQuery"
         android:layout_alignLeft="@+id/textView"
         android:layout_alignStart="@+id/textView" />
 
@@ -51,21 +59,22 @@
         android:layout_height="wrap_content"
         android:text="SHOW DATA"
         android:id="@+id/showData"
-        android:layout_below="@+id/loadButton"
-        android:layout_alignRight="@+id/loadButton"
-        android:layout_alignEnd="@+id/loadButton"
+        android:layout_above="@+id/loadStatus"
         android:layout_alignLeft="@+id/loadButton"
-        android:layout_alignStart="@+id/loadButton" />
+        android:layout_alignStart="@+id/loadButton"
+        android:layout_marginBottom="46dp"
+        android:layout_alignRight="@+id/testQuery"
+        android:layout_alignEnd="@+id/testQuery" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TEST "
         android:id="@+id/testQuery"
-        android:layout_below="@+id/showData"
-        android:layout_alignRight="@+id/showData"
-        android:layout_alignEnd="@+id/showData"
-        android:layout_alignLeft="@+id/showData"
-        android:layout_alignStart="@+id/showData" />
+        android:layout_above="@+id/showData"
+        android:layout_alignLeft="@+id/loadButton"
+        android:layout_alignStart="@+id/loadButton"
+        android:layout_alignRight="@+id/loadButton"
+        android:layout_alignEnd="@+id/loadButton" />
 
 </RelativeLayout>
