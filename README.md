@@ -43,6 +43,9 @@ Solution: Implement the test "Equal" by finding the places equal to Evanston or 
 
 4. The DiskSpace/ find the db file and the compare(508 photos)
 Realm: 147KB  SQlite: 61KB
+
+#### MileStone 7 --- Week 7 
+
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
