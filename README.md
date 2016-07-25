@@ -29,6 +29,7 @@ Talk With Demai:
 - Build the App using SQLite and perform the same tests again
 
 #### Mile Stone 6 --- Week 6
+Finished the first draft of the poster, wondering what will be the next step for this project 
 
 Talk With Demai:
 
@@ -36,10 +37,12 @@ Talk With Demai:
 
 2. The Select Test of the month and time range, one of them should be implemented by using the Realm, equal""
 
+Solution: Implement the test "Equal" by finding the places equal to Evanston or Chicago
+
 3. Find the usage of the Memory between Realm and Sqlite when executing the app
 
-4. The DiskSpace/ find the db file and the compare
-
+4. The DiskSpace/ find the db file and the compare(508 photos)
+Realm: 147KB  SQlite: 61KB
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
