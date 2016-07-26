@@ -46,6 +46,12 @@ Realm: 147KB  SQlite: 61KB
 
 #### MileStone 7 --- Week 7 
 
+Talk With Demai: 
+
+1. better to get a couple more data points, such as 1000 photos and 2000 photos. so that we are able to draw a plot and make the comparison  predictable . the same idea apply to other part measurement. (disk space, memory, speed)
+2. recognize a particular object, start with facial.
+
+
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
