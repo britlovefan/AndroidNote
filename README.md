@@ -59,7 +59,7 @@ My Intention:
 3. How to implement the "Friend" Function:
 Suppose that you are friend with each other on the app and If we found that groups of you are tagged in a photo, and we could generate a friendship diary of " One XXX(Date),  you guys(...) are having fun at XXX (The location data)" The GPS and the timestamp data could be retrieved from the Realm database.
 
-What I found out about different APIS:
+What I found out about different API:
 
 The android API is not trustworthy, even by increasing the size of the photo, it could hardly detect whether a person exist in the photo. Especially when the face is small.. 
 
