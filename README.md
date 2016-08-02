@@ -51,6 +51,21 @@ Talk With Demai:
 1. better to get a couple more data points, such as 1000 photos and 2000 photos. so that we are able to draw a plot and make the comparison  predictable . the same idea apply to other part measurement. (disk space, memory, speed)
 2. recognize a particular object, start with facial.
 
+#### MileStone 8 --- Week 8
+
+My Intention:
+1. Filter out the photos with faces in them 
+2. Tag the photo's with faces in them and tag each person:?-- ( Need the training? (To tag manually or could implement it automatically if we have enough database?)
+3. How to implement the "Friend" Function:
+Suppose that you are friend with each other on the app and If we found that groups of you are tagged in a photo, and we could generate a friendship diary of " One XXX(Date),  you guys(...) are having fun at XXX (The location data)" The GPS and the timestamp data could be retrieved from the Realm database.
+
+What I found out about different APIS:
+
+The android API is not trustworthy, even by increasing the size of the photo, it could hardly detect whether a person exist in the photo. Especially when the face is small.. 
+
+The Microsoft version still is not effective!
+
+Google Cloud Version: Better then the above API but it just describe the object it sees and it also cannot locate the faces as Facebook’s API. It’s not face oriented?
 
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
