@@ -67,6 +67,13 @@ The Microsoft version still is not effective!
 
 Google Cloud Version: Better then the above API but it just describe the object it sees and it also cannot locate the faces as Facebook’s API. It’s not face oriented?
 
+#### MileStone 9 --- Week 9 
+Talk With Demai: 
+1. List the API you have tried out before and make a form comparison.
+2. Google: Picasso. 
+3. The usage of the app: not to make it actually as a product but could reveal its structure
+4. Implement the recognition part on server and what is the Algorithms on the front end and backend
+
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
 you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
