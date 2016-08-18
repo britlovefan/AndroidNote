@@ -28,7 +28,8 @@ Talk With Demai:
 - Test the query of selecting the nearest photo to a random place 
 - Build the App using SQLite and perform the same tests again
 
-#### Mile Stone --- Week 6
+#### Mile Stone 6 --- Week 6
+Finished the first draft of the poster, wondering what will be the next step for this project 
 
 Talk With Demai:
 
@@ -36,9 +37,42 @@ Talk With Demai:
 
 2. The Select Test of the month and time range, one of them should be implemented by using the Realm, equal""
 
+Solution: Implement the test "Equal" by finding the places equal to Evanston or Chicago
+
 3. Find the usage of the Memory between Realm and Sqlite when executing the app
 
-4. The DiskSpace/ find the db file and the compare
+4. The DiskSpace/ find the db file and the compare(508 photos)
+Realm: 147KB  SQlite: 61KB
+
+#### MileStone 7 --- Week 7 
+
+Talk With Demai: 
+
+1. better to get a couple more data points, such as 1000 photos and 2000 photos. so that we are able to draw a plot and make the comparison  predictable . the same idea apply to other part measurement. (disk space, memory, speed)
+2. recognize a particular object, start with facial.
+
+#### MileStone 8 --- Week 8
+
+My Intention:
+1. Filter out the photos with faces in them 
+2. Tag the photo's with faces in them and tag each person:?-- ( Need the training? (To tag manually or could implement it automatically if we have enough database?)
+3. How to implement the "Friend" Function:
+Suppose that you are friend with each other on the app and If we found that groups of you are tagged in a photo, and we could generate a friendship diary of " One XXX(Date),  you guys(...) are having fun at XXX (The location data)" The GPS and the timestamp data could be retrieved from the Realm database.
+
+What I found out about different API:
+
+The android API is not trustworthy, even by increasing the size of the photo, it could hardly detect whether a person exist in the photo. Especially when the face is small.. 
+
+The Microsoft version still is not effective!
+
+Google Cloud Version: Better then the above API but it just describe the object it sees and it also cannot locate the faces as Facebook’s API. It’s not face oriented?
+
+#### MileStone 9 --- Week 9 
+Talk With Demai: 
+1. List the API you have tried out before and make a form comparison.
+2. Google: Picasso. 
+3. The usage of the app: not to make it actually as a product but could reveal its structure
+4. Implement the recognition part on server and what is the Algorithms on the front end and backend
 
 #####The IMPROVEMENT: 
 Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
