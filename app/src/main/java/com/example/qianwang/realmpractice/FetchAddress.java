@@ -2,15 +2,22 @@ package com.example.qianwang.realmpractice;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ResultReceiver;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.example.qianwang.realmpractice.model.Photo;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +46,7 @@ public class FetchAddress extends IntentService {
     String locationId;
     String zipCode;
     ArrayList<String> photoId;
-    // The arraylists to first store the data and later insert into the Realm datapbase
+    // The arraylists to first store the data and later insert into the Realm database
     ArrayList<Address>photoAddress;
     ArrayList<Location>photoLocation;
     public FetchAddress() {
@@ -75,9 +82,9 @@ public class FetchAddress extends IntentService {
                 double longitude = location.getLongitude();
                 long time = location.getTime();
                 Date date = new Date(time);
-                num++;
 
                 if (latitude != 0 && longitude != 0 && time != 0) {
+                    num++;
                     try {
                         possibleAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     } catch (IOException ioException) {
@@ -132,6 +139,7 @@ public class FetchAddress extends IntentService {
         realm.close();
         Log.v("Time Elapse",timeSum+"ms");
         deliverResult(Constants.SUCCESS_RESULT,photoId.size());
+
     }
 
     //deliver the result code revealing whether the address have been successfully retrieved

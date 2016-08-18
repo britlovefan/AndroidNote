@@ -22,4 +22,5 @@ public final class Constants {
     public static final String TOTAL_NUM = PACKAGE_NAME + "TOTAL_NUM";
     public static final String TEST_RECEIVER = PACKAGE_NAME + "TEST_RECEIVER";
     public static final String ELAPSE_TIME = PACKAGE_NAME + "ELAPSE_TIME";
+    public static final String INSERT_ELAPSE = PACKAGE_NAME + "INSERT_ELAPSE";
 }

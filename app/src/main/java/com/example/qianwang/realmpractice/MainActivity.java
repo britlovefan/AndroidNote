@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +14,8 @@ import android.os.ResultReceiver;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +33,11 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 import com.example.qianwang.realmpractice.model.Photo;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -78,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadPictures();
+                getMemoryUse();
             }
         });
 
@@ -119,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         //clean the data to migration? maybe do not need to
         final RealmResults<Photo> results1 = realm.where(Photo.class).findAll();
         realm.executeTransaction(new Realm.Transaction() {
@@ -141,19 +152,12 @@ public class MainActivity extends AppCompatActivity {
         status = (TextView)findViewById(R.id.loadStatus);
         testResult = (TextView)findViewById(R.id.results);
     }
-    // get the exif data from the pictures in a folder
-    // the directory of the photos should be modified to be the folder of photos in android phone
-    // if not using emulator
+    // get the exif data from the pictures in sdCard
     private void loadPictures() {
         //progressBar.setVisibility(View.VISIBLE);
         status.setText("We Are Busy Loading Your Photos...");
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures";
         startIntentService(sdcard);
-        //register receiver
-        /*myBroadcastReceiver_Update = new MyBroadcastReceiver_Update();
-        IntentFilter intentFilter_update = new IntentFilter(Constants.UPDATE);
-        intentFilter_update.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(myBroadcastReceiver_Update, intentFilter_update);*/
     }
 
     // start intent service for each GPS data pair
@@ -230,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
             //unseen the progressbar and the text
             progressBar.setVisibility(View.INVISIBLE);
             status.setText("");
-            startActivity(new Intent(getApplicationContext(), OptionChooser.class));
+            //startActivity(new Intent(getApplicationContext(), OptionChooser.class));
         }
     }
     // The receiver for the test query speed result
@@ -242,11 +246,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             long[] result = resultData.getLongArray(Constants.ELAPSE_TIME);
-            testResult.setText("Test Equal Realm "+result[0]+"ms");
-            testResult.append("\n"+"Test Time Range "+result[1]+"ms");
-            testResult.append("\n"+"Test Nearest Location "+result[2]+"ms");
-            //testResult.setText("${testResult.getText()}\n${Test Month Range}: ${result[1]} ms");
-            //testResult.setText("${testResult.getText()}\n${Test Nearest Location}: ${result[2]} ms");
+            testResult.append("\n"+"Test Equal Realm: "+result[0]+"ms");
+            testResult.append("\n"+"Test Time Range: "+result[1]+"ms");
+            testResult.append("\n"+"Test Nearest Location: "+result[2]+"ms");
         }
     }
     //Trying to implement the progress bar
@@ -256,5 +258,13 @@ public class MainActivity extends AppCompatActivity {
             int update = intent.getIntExtra(Constants.INTENT_UPDATE, 0);
             progressBar.setProgress(update);
         }
+    }
+    // Get the memory usage of the app
+    public void getMemoryUse(){
+        final Runtime runtime = Runtime.getRuntime();
+        final long usedMemInMB=(runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+        final long maxHeapSizeInMB=runtime.maxMemory() / 1048576L;
+        Log.v("usedMemInMB",usedMemInMB+"");
+        Log.v("maxHeapSizeInMB",maxHeapSizeInMB+"");
     }
 }

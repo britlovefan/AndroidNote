@@ -70,7 +70,6 @@ public class ShowTimeline extends AppCompatActivity {
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressVal, boolean fromUser) {
                 progress = progressVal;

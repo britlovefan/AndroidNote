@@ -148,7 +148,7 @@ import io.realm.RealmResults;
             for (MyItem p : cluster.getItems()) {
                 if (profilePhotos.size() == 4) break;
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/"+p.fileName;
-                File imgFile = new  File(filePath);
+                File imgFile = new File(filePath);
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 Drawable drawable = new BitmapDrawable(getResources(),myBitmap);
                 drawable.setBounds(0, 0, width, height);

@@ -43,7 +43,7 @@ public class TestQuerySpeed extends IntentService{
             long[] result = {testEqual,timeElapseMonth[1],TestLocationQuery()};
             deliverResult(0,result);
             realm.close();
-        // need to close the Realm?
+        // need to close the Realm
     }
     //Pass the result back to the UI for display
     private void deliverResult(int resultcode,long[] timeElapse) {
@@ -84,7 +84,7 @@ public class TestQuerySpeed extends IntentService{
     //function that returns the range of time in millis in random month/year
     protected long[] RandomGenerateMonth() {
         SimpleDateFormat dfDateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        int year = randBetween(2015, 2016);
+        int year = randBetween(2012, 2016);
         int month = randBetween(0, 11);
         int hour = randBetween(7, 22);
         int min = randBetween(0, 59);
@@ -103,7 +103,7 @@ public class TestQuerySpeed extends IntentService{
     //function that returns random time range
     protected long[] RandomGenerateRange() {
         SimpleDateFormat dfDateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        int year = randBetween(2015, 2016);
+        int year = randBetween(2012, 2016);
         int month = randBetween(0, 11);
         int month2 = randBetween(month, 11);
         int hour = randBetween(7, 22);
@@ -131,7 +131,7 @@ public class TestQuerySpeed extends IntentService{
             LatLng origin = randomLocations.get(i);
             GeoLocation myLocation = GeoLocation.fromDegrees(origin.latitude,origin.longitude);
             //set the distance bound,maybe need to readjusts if no places are found in the area
-            double distanceBound = 600;
+            double distanceBound = 1000;
             GeoLocation[] bounds = myLocation.boundingCoordinates(distanceBound, earthRadius);
             double latmin = bounds[0].getLatitudeInRadians();
             double lgnmin = bounds[0].getLongitudeInRadians();
