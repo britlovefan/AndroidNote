@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadPictures();
                 getMemoryUse();
+                Log.d("", "path: " + realm.getPath());
             }
         });
 

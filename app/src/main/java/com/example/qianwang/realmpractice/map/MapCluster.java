@@ -102,7 +102,7 @@ import io.realm.RealmResults;
                 mClusterManager.addItem(offsetItem);
             //}
         }
-        getMap().setOnCameraChangeListener(mClusterManager);
+        getMap().setOnCameraChangeListener((GoogleMap.OnCameraChangeListener) mClusterManager);
     }
     private class PhotoRenderer extends DefaultClusterRenderer<MyItem> {
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
