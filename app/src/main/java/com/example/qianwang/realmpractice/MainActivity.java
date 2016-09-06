@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     toast.show();
                 }
                 else {
+                    //to show
+                    testResult.setText("");
                     Intent intent = new Intent(getApplicationContext(), TestQuerySpeed.class);
                     sender = new TestResultReceiver(new Handler());
                     intent.putExtra(Constants.TEST_RECEIVER, sender);
