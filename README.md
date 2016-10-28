@@ -1,87 +1,102 @@
-# Your Secret Tracker
+#Location-Based Project Through Android System
+Background: 
+Nowadays people take photos with their cell phone and we could use the metadata to perform some interesting analysis based on the timestamp and GPS data. The project's aim is to test the efficiency of Realm Database and Android original SQLite Database utilizing the location and timestamp information retrieved from the photos.
 
-#### MileStone 1 --- Week 1 
-Get familiar with Realm.io and retrieve the GPS data from the Pictures/
+For those who are not familiar with Realm Database, please refer to : https://realm.io/docs/java/latest/
 
-#### MileStone 2 --- Week 2
-Retrieve the Location Data from the GPS info in the background, included Zipcode and State and City
+The Realm based version is build upone Realm 1.0.0
 
-#### MileStone 3 --- Week 3 
+###The App's Function:
 
-Implemented a SeekBar TimeLine that could allow the user to search the photo by touching across the bar, but doesn't 
-Could display the location of photo on the map and implement a photo outlook cluster with the number of items on the icon
+1. Group the photos according to the timeline
 
-#### MileStone 4 --- Week 4 
-- The unseen part should not be generated(still try to implement)
-- Build a test that record the time spent on select specific month/time range
+2. Cluster the photos' location on map
 
-Talk With Demai:
+3. Perform Query Testing&Evaluation for Realm and SQLite
 
-1. Separate the loop of fetchAddress when loading the photo's information to the database. Keep the location data in an array or hash map and fetch the data directly from array or hash map.
+### The Interface of the App:
 
-2. In the ShowTimeLine.java: Construct 3 test, each perform 1000 times, use a Random Generator to generate the query month/specific time range. Random Generate the Latitude/ Logitude (Point on Map) and select out the photo that are within range to the random point
+![pjimage](https://cloud.githubusercontent.com/assets/13210944/17783588/8ff0c6ca-652d-11e6-8a79-b52bf0c3213c.jpg)
 
-3. Build the App using SQLite, perform the above procedure and calculate the time.
 
-#### MileStone 5 --- Week 5 
+### How to Use and Install:
+  By default, the app will require both the photos under the Pictures folder and internet connection. Thus if you are running the app on a real device, make sure that your device have pictures under the Pictures folder and you either turn on wifi or cellular data before running the app, else you will receive the notification that your photos are not loaded correctly. If you use the emulator instead, use the adb push command to push your photos of .jpg to the emulator. 
 
-- Test the query of selecting the nearest photo to a random place 
-- Build the App using SQLite and perform the same tests again
+### The structure of the app (Realm & SQLite)
 
-#### Mile Stone 6 --- Week 6
-Finished the first draft of the poster, wondering what will be the next step for this project 
+#### 1. Realm
+Project Name: RealmPractice
 
-Talk With Demai:
+-map--(package): contains the class files for map cluster
 
-1. Current Photo is 300+, need to grow to 1000+
+-model--(package): Photo.class defines the database table; GeoLocation.class is used to return the bounding box cordinates in finding the nearest photo test
 
-2. The Select Test of the month and time range, one of them should be implemented by using the Realm, equal""
+Constants.class: store the constant used to pass between intent service
 
-Solution: Implement the test "Equal" by finding the places equal to Evanston or Chicago
+FetchAddress.class: retrieve the geo information and insert the data into the database
 
-3. Find the usage of the Memory between Realm and Sqlite when executing the app
+OptionChooser.class: the interface that choose show timeline or show photo's location on map
 
-4. The DiskSpace/ find the db file and the compare(508 photos)
-Realm: 147KB  SQlite: 61KB
+ShowTimeline.class: show photos in time order
 
-#### MileStone 7 --- Week 7 
+TestQuerySpeed: implemented in background service, perform all the tests related to the database
 
-Talk With Demai: 
+#### 2. SQLite
+Project Name: SqlitePhoto
 
-1. better to get a couple more data points, such as 1000 photos and 2000 photos. so that we are able to draw a plot and make the comparison  predictable . the same idea apply to other part measurement. (disk space, memory, speed)
-2. recognize a particular object, start with facial.
+--model(package): Constant.class used to store the string that define the database and used to pass between service; Photo.class defines the database object 
 
-#### MileStone 8 --- Week 8
+DBHandler: deal with the main database operation
 
-My Intention:
-1. Filter out the photos with faces in them 
-2. Tag the photo's with faces in them and tag each person:?-- ( Need the training? (To tag manually or could implement it automatically if we have enough database?)
-3. How to implement the "Friend" Function:
-Suppose that you are friend with each other on the app and If we found that groups of you are tagged in a photo, and we could generate a friendship diary of " One XXX(Date),  you guys(...) are having fun at XXX (The location data)" The GPS and the timestamp data could be retrieved from the Realm database.
+FetchAddress: retrieve the geo information from the photos and insert into the database
 
-What I found out about different API:
+GeoLocation: the bounding box used in nearest location test that returns the four coordinates
 
-The android API is not trustworthy, even by increasing the size of the photo, it could hardly detect whether a person exist in the photo. Especially when the face is small.. 
+TestQuerySpeed: perform the tests related to database
 
-The Microsoft version still is not effective!
+###The DataBase Table Defined:
 
-Google Cloud Version: Better then the above API but it just describe the object it sees and it also cannot locate the faces as Facebook’s API. It’s not face oriented?
+  For both Realm and SQLite, the database is defined as below, revealing the GPS(Latitude&Longitude),TimeStamp and Location for each photo. With the photo's name being its id. For both Realm and SQLite version , you can find the database description file located under "model" package, the file "Photo.class". 
 
-#### MileStone 9 --- Week 9 
-Talk With Demai: 
-1. List the API you have tried out before and make a form comparison.
-2. Google: Picasso. 
-3. The usage of the app: not to make it actually as a product but could reveal its structure
-4. Implement the recognition part on server and what is the Algorithms on the front end and backend
+![screen shot 2016-08-17 at 3 58 44 pm](https://cloud.githubusercontent.com/assets/13210944/17756238/9146c3d4-6493-11e6-9d12-cb62ec99b43a.png)
 
-#####The IMPROVEMENT: 
-Imagine there are many user's photo library, how to recoginize that maybe you guys are at the same time when
-you don't even know each other. What's more, implement the the ML face recogintion in your photos (?)will there be security problem involved. And how to redesign the database to demonstrate the users. 
-Tap on the Map, shows the nearest place you've been to 
-- No need to reload the photos everytime, figure out how to discover that the photos in the folder have been changed and asked 
-the user to choose whether to update their current database or not. 
-- Group the photos into catogory, place a little icon like food/shopping center/school/work/scenary 
-"Show places that I have eaten at" on the Map and filter out the pictures in that category 
+### Load the data to the Database
 
-#### The Presentation --- Last Week
-What is your Algorithms, How to demo your App, Any other Chart or data to show the Comparison?
+  By clicking the button "Load Photo", you start to insert the data. The process of retriving the exif data(GPS and timestamp) of the photos is implemented in background intent service: FetchAddress.class. Insert the data to the table and in the meantime record the time elapse during the insert process. 
+
+### Query Speed Comparison Between SQLite&Realm
+
+   Implemented in background service "TestQuerySpeed". Perform three kind of test query:
+
+- Equal Query: Select from the database the photos whose location is "Evanston" for 1000 times
+- Select Query: Select the photo within a random month range or date range, each perform 1000 times 
+- Finding the Nearest Location: Select the photos closest to a random location in the database. Run the test for 5000 times. 
+
+  Algorithms: Instead of simply calculate all the distance to a point and select the smallest among the candidate point, first compute a bounding box coordinates that can be used for a database index scan – just like we would use minimum bounding rectangles to speed up queries in Cartesian space. The speed is improved when narrow down the candidates within the bounding box and then perform the distance calculations and iteration to decide the nearest photo location in the databases. Perform the same algorithms on SQLite and Realm
+
+  ####Test Result:
+  Based on the device: HuaWei Nexus 6P 64GB RAM:3GB
+  
+![untitled](https://cloud.githubusercontent.com/assets/13210944/18603251/b9fc6cb8-7c24-11e6-87d6-f5fda2b8c333.png)
+
+  ![image001](https://cloud.githubusercontent.com/assets/13210944/17864963/184e9a0e-6855-11e6-9bee-98a34bf8cbfe.png)
+  
+### Comparsion Of Disk Space& Memory Use 
+  
+  For 1000 items in the database, the Realm takes 360 KB while the SQLite takes 94 KB.
+  The memory usage is similar between Realm and SQLite
+
+### Scalibility
+
+  As database's size grows, the realm's speed over SQLite keeps almost the same and slight reduced when the photo album's size grows to 2000. 
+  
+  ![image002](https://cloud.githubusercontent.com/assets/13210944/18457038/6a790aec-790a-11e6-8838-15cf8d75cd63.png)
+
+### Conclusions
+
+As can be seen from the chart, for all the 4 query type testing, Realm is much more faster than the traditional SQLite database when dealing with the GIS data from the photos. Realm is also easier to use. SQLite requires lots of Strings to define the table and the thread management could lead to hard-to-debug exceptions.The problem with Realm is that that it doesn't support some specific query like calendar oriented function which are supported in traditional SQLite database. Therefore, if the app requires faster speed then Realm could be a good choice over SQLite, though many other aspects may need consideration.
+
+
+
+
+
